@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인</title>
+  <script src="/js/login.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #001f3f;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 24px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      font-weight: bold;
+    }
+
+    footer {
+      background-color: ghostwhite;
+      color: black;
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 14px;
+      position: relative;
+      margin-top: 50px;
+    }
+
+    .login-container {
+      flex: 1;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 80px;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .login-section {
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      margin: 0 auto;
+    }
+
+    .login-section h1 {
+      font-size: 36px;
+      margin-bottom: 40px;
+      color: black;
+    }
+
+    .login-section input {
+      width: 100%;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      background-color: #f8f9fa;
+    }
+
+    .login-section input:focus {
+      outline: none;
+      border-color: #007BFF;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .login-section button {
+      width: 100%;
+      padding: 15px;
+      margin: 20px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007BFF;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .login-section button:hover {
+      background-color: #0056d2;
+    }
+
+    .login-section .help-text {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    .login-section .help-text:hover {
+      text-decoration: underline;
+    }
+
+    .login-section .kakao-login {
+      width: 100%;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      text-align: center;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.05); /* 회색 투명 배경 */
+      color: black;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .login-section .kakao-login:hover {
+      background-color: rgba(0, 0, 0, 0.1); /* 호버 시 더 진한 투명 회색 */
+      color: black;
+    }
+
+    .signup-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .signup-container span {
+      font-size: 14px;
+      margin-right: 10px;
+      color: black;
+    }
+
+    .signup-container a {
+      color: #007BFF;
+      background-color: rgba(0, 0, 0, 0.05);
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .signup-container a:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+<header>
+  InterQ
+</header>
+
+<div class="login-container">
+  <section class="login-section">
+    <h1>안녕하세요!</h1>
+    <form id="login-form">
+      <input type="text" name="username" placeholder="아이디 (7자 이상)" minlength="7" required>
+      <input type="password" name="password" placeholder="비밀번호" required>
+      <button type="submit">로그인</button>
+    </form>
+    <a href="#" class="help-text">아이디/비밀번호를 잊으셨나요?</a>
+    <button class="kakao-login" onclick="window.location.href='/kakao-login'">
+      <img src=/images/kakao-icon.png alt="카카오" style="vertical-align: middle; width: 24px; height: 24px; margin-right: 8px;">
+      카카오 아이디로 로그인
+    </button>
+    <div class="signup-container">
+      <span>처음이신가요?</span>
+      <a href="/signup">회원가입</a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>&copy; 2025 Smart AI Interview. All rights reserved.</p>
+  <p>문의: https://www.sungkyul.ac.kr/computer/index.do/짬뽕밥</p>
+  <p>소셜 미디어:
+    <a href="https://www.sungkyul.ac.kr/computer/index.do" style="color: lightblue;">운영진</a> |
+    <a href="#" style="color: lightblue;">Twitter</a> |
+    <a href="#" style="color: lightblue;">Instagram</a>
+  </p>
+</footer>
+</body>
+</html>

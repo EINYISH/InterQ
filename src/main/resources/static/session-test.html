@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>세션 상태 테스트</title>
+</head>
+<body>
+<h1>InterQ 세션 상태 확인 페이지</h1>
+<p>콘솔(F12)을 열고 로그인 여부를 확인하세요.</p>
+
+<script>
+    async function checkSession() {
+        try {
+            const res = await fetch("/api/session-info", {
+                method: "GET",
+                credentials: "include" // 세션 기반 인증 필수 설정
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                console.log("✅ 로그인된 사용자:", data.username);
+                document.body.insertAdjacentHTML("beforeend", `<p style="color:green;">로그인됨: ${data.username}</p>`);
+            } else {
+                console.log("❌ 로그인되어 있지 않음");
+                document.body.insertAdjacentHTML("beforeend", `<p style="color:red;">로그인되어 있지 않음</p>`);
+            }
+        } catch (err) {
+            console.error("요청 실패:", err);
+            document.body.insertAdjacentHTML("beforeend", `<p style="color:red;">요청 실패: ${err.message}</p>`);
+        }
+    }
+
+    checkSession();
+</script>
+</body>
+</html>

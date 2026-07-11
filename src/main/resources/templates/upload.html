@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이력서 업로드</title>
+    <script src="/js/common.js" defer></script>
+    <script src="/js/question-generator.js" defer></script>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: #001f3f;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        header h1 {
+            font-family: Charter;
+            font-weight: bolder;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        nav button {
+            padding: 10px 15px;
+            background: #001f3f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        nav button:hover {
+            background: lightgray;
+        }
+
+        footer {
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: ghostwhite;
+            color: black;
+            text-align: left;
+            padding: 15px 15px;
+        }
+
+        #upload {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: auto;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .upload-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            flex-wrap: nowrap; /* 좌우 배치를 유지 */
+        }
+
+        .upload-card {
+            width: 48%; /* 두 개의 카드 배치 */
+            padding: 20px;
+            border: 2px solid #001f3f;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .upload-card h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* 텍스트 입력란 */
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 텍스트 영역 */
+        textarea {
+            resize: vertical; /* 세로 크기만 조절 가능 */
+            height: 50px; /* 텍스트 영역의 기본 높이 */
+        }
+
+        /* 경력 그리드 스타일 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3개 칸으로 배치 */
+            gap: 20px; /* 카드 간격 */
+            width: 100%;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 120px; /* 정사각형 카드 크기 */
+        }
+
+        .card label {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* 경력 목표 및 토익 점수를 동일선상에 배치 */
+        .double-input .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .double-input .column {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* 제출 버튼 스타일 */
+        .submit-button {
+            display: flex;
+            margin-top: 20px;
+
+        }
+
+        .submit-button button {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #0f172a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            justify-content: flex-end;
+        }
+
+        .submit-button button:hover {
+            background-color: #1e293b;
+            transform: scale(1.05); /* 확대 효과 */
+        }
+
+
+        #resume-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        /*로그인 버튼스타일 코드*/
+        /* 상태 버튼 스타일 */
+        #auth-status button {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #f7f9fc;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #auth-status button:hover {
+            background: lightgray;
+        }
+
+        #auth-status button[disabled] {
+            background: #f0f0f0;
+            cursor: default;
+            color: #555;
+            border-color: #ddd;
+        }
+
+        .arrow-container {
+            position: absolute;
+            top: 90%; /* 카드의 중앙 */
+            right: 20px; /* 카드와의 거리 */
+            transform: translateY(-50%);
+        }
+
+        .arrow {
+            width: 60px;
+            height: 60px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .arrow:before {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 30px solid transparent;
+            border-bottom: 30px solid transparent;
+            border-left: 30px solid #ffcc00; /* 화살표 색상 */
+            transition: border-color 0.3s ease;
+            transform: scale(1.05); /* 확대 효과 */
+        }
+
+        .arrow:hover:before {
+            border-left-color: lightgray; /* 호버 시 색상 변경 */
+        }
+
+        /* 초기 숨김 효과 */
+        .hidden {
+            opacity: 0;
+            transform: translateY(30px); /* 아래에서 위로 올라오는 느낌 */
+            transition: opacity 1s ease, transform 1s ease; /* 부드러운 전환 */
+        }
+
+        /* 화면에 보일 때 활성화 */
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .right-card .submit-button {
+            display: flex;
+            justify-content: flex-end; /* 버튼 오른쪽 정렬 */
+            gap: 20px; /* 버튼 간격 조정 */
+            margin-top: 30px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+<header>
+    <h1>InterQ</h1>
+    <nav>
+        <button onclick="goToPage('/index')">Home</button>
+        <button onclick="window.location.href='/upload'">이력서 Upload</button>
+        <button onclick="window.location.href='/feedback'">이력서 Feedback</button>
+        <button onclick="goToPage('contact')">Contact</button>
+        <button onclick="window.location.href='/login'">login</button>
+        <span id="header-nickname" style="display: none;"></span>
+    </nav>
+</header>
+
+
+<div>
+    <h1 id="resume-title">이력서 입력</h1>
+</div>
+
+<main>
+    <form id="upload">
+        <div class="upload-container">
+            <!-- 왼쪽 카드 -->
+            <div class="upload-card left-card">
+                <div class="section">
+                    <h2>기본 정보</h2>
+                    <label for="name">이름</label>
+                    <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+                    <label for="birthday">생년월일</label>
+                    <input type="text" id="birthday" name="birthday" placeholder="생년월일을 입력하세요" required>
+                    <label for="contact-information">연락처</label>
+                    <input type="text" id="contact-information" name="contact-information" placeholder="연락처를 입력하세요" required>
+                </div>
+
+                <div class="section">
+                    <h2>학력</h2>
+                    <label for="education-level">최종학력</label>
+                    <input type="text" id="education-level" name="education-level" placeholder="고졸/학사/석사/박사와 같이 최종학력을 입력하세요" required>
+
+                    <label for="major">전공</label>
+                    <input type="text" id="major" name="major" placeholder="전공을 입력하세요" required>
+
+                    <label for="university">학교</label>
+                    <input type="text" id="university" name="university" placeholder="학교명을 입력하세요" required>
+
+                    <label for="graduation-date">졸업 연도</label>
+                    <input type="text" id="graduation-date" name="graduation-date" placeholder="졸업 연도를 입력하세요" required>
+                </div>
+
+                <div class="section">
+                    <h2>경력</h2>
+                    <label for="work-experience">경력</label>
+                    <textarea id="work-experience" name="work-experience" placeholder="업무 경력을 입력하세요" rows="1" required></textarea>
+
+                    <label for="job-roles">직무 역할</label>
+                    <textarea id="job-roles" name="job-roles" placeholder="주요 직무 역할을 입력하세요" rows="1" required></textarea>
+
+                    <label for="projects">프로젝트 경험</label>
+                    <textarea id="projects" name="projects" placeholder="프로젝트 경험을 입력하세요" rows="1" required></textarea>
+                </div>
+            </div>
+
+            <!-- 오른쪽 카드 -->
+            <div class="upload-card right-card">
+                <div class="section">
+                    <h2>기술 및 역량</h2>
+                    <label for="certifications">보유 자격증</label>
+                    <textarea id="certifications" name="certifications" placeholder="보유한 자격증을 입력하세요" rows="1" required></textarea>
+
+                    <label for="language-proficiency">외국어 능력</label>
+                    <textarea id="language-proficiency" name="language-proficiency" placeholder="외국어 능력을 입력하세요" rows="1" required></textarea>
+
+                    <label for="technical-skills">보유 기술</label>
+                    <textarea id="technical-skills" name="technical-skills" placeholder="보유한 기술이나 사용 가능한 툴을 입력하세요" rows="1" required></textarea>
+                </div>
+
+
+                <div class="section">
+                    <h2>지원 동기 및 자기소개</h2>
+                    <label for="desired-field">지원 분야</label>
+                    <textarea id="desired-field" name="desired-field" placeholder="지원 분야를 입력하세요(ex.기획/개발/디자인/인사)" rows="1" required></textarea>
+
+                    <label for="desired-position">희망 직무</label>
+                    <textarea id="desired-position" name="desired-position" placeholder="희망 직무를 입력하세요" rows="1" required></textarea>
+
+                    <label for="career-goals">향후 경력 목표</label>
+                    <textarea id="career-goals" name="career-goals" placeholder="향후 경력 목표를 입력하세요" required></textarea>
+
+                    <label for="self-introduction">자기소개</label>
+                    <textarea id="self-introduction" name="self-introduction"
+                              placeholder="자기소개를 입력하세요"
+                              rows="8" required
+                              style="width: 100%; min-height: 160px; resize: vertical; box-sizing: border-box;"></textarea>
+                </div>
+
+                <div class="submit-button">
+                    <button type="submit" id="submit-button">이력서 제출</button>
+                    <button id="display-questions-button">저장된 질문 보기</button>
+                </div>
+            </div>
+        </div>
+        <!-- Go to Simulation 화살표 버튼 -->
+        <div class="arrow-container">
+            <button class="arrow" onclick="window.location.href='/notice'" id="go-to-simulation"></button>
+        </div>
+    </form>
+</main>
+<footer>
+    <p>&copy; 2025 Smart AI Interview. All rights reserved.</p>
+    <p>문의: https://www.sungkyul.ac.kr/computer/index.do/짬뽕밥</p>
+    <p>소셜 미디어:
+        <a href="https://www.sungkyul.ac.kr/computer/index.do" style="color: lightblue;">운영진</a> |
+        <a href="#" style="color: lightblue;">Twitter</a> |
+        <a href="#" style="color: lightblue;">Instagram</a>
+    </p>
+</footer>
+
+<script>
+
+</script>
+</body>
+</html>

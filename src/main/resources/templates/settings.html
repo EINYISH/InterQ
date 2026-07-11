@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 정보 수정</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #343a40;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background-color: #001f3f;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 24px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      font-weight: bold;
+    }
+
+    header h1 {
+      font-family: Charter, serif;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      margin: 0;
+    }
+
+    .page-section {
+      flex: 1;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 80px;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      background:  #f9f9f9;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .container h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      background-color: #f8f9fa;
+      position: relative;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      gap: 20px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      background-color: #f2c200;
+      color: white;
+    }
+
+    .btn-submit:hover {
+      background-color: #e0a800;
+    }
+
+    .btn-home {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-home:hover {
+      background-color: #5a6268;
+    }
+
+
+    footer {
+      background-color: ghostwhite;
+      color: black;
+      text-align: center;
+      padding: 15px 0;
+      bottom: 0;
+      width: 100%;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      margin-top: 50px;
+    }
+    footer p {
+      margin: 5px 0;
+    }
+    footer a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 60%; /* 약간 아래로 조정 */
+      transform: translateY(-50%); /* 세로 중앙 정렬 유지 */
+      cursor: pointer;
+      font-size: 18px;
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>InterQ</h1>
+</header>
+<section class="page-section">
+  <div class="container">
+    <h1>개인정보 수정</h1>
+    <form id="user-form">
+      <div class="form-group">
+        <label for="username">아이디:</label>
+        <input type="text" id="username" name="username" readonly>
+      </div>
+      <div class="form-group">
+        <label for="nickname">닉네임:</label>
+        <input type="text" id="nickname" name="nickname" required>
+      </div>
+      <div class="form-group">
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required>
+        <span class="toggle-password" id="togglePassword">👁️</span>
+      </div>
+      <div class="btn-container">
+        <button type="submit" class="btn btn-submit">수정 완료</button>
+        <button type="button" class="btn btn-home" onclick="window.location.href='/'">홈페이지로 나가기</button>
+      </div>
+    </form>
+    <p id="message"></p>
+  </div>
+</section>
+<footer>
+  <p>&copy; 2025 Smart AI Interview. All rights reserved.</p>
+  <p>문의: https://www.sungkyul.ac.kr/computer/index.do/짬뽕밥</p>
+  <p>소셜 미디어:
+    <a href="https://www.sungkyul.ac.kr/computer/index.do" style="color: lightblue;">운영진</a> |
+    <a href="#" style="color: lightblue;">Twitter</a> |
+    <a href="#" style="color: lightblue;">Instagram</a>
+  </p>
+</footer>
+<script type="module">
+  document.addEventListener('DOMContentLoaded', async () => {
+    const usernameField = document.getElementById('username');
+    const nicknameField = document.getElementById('nickname');
+    const passwordField = document.getElementById('password');
+    const message = document.getElementById('message');
+
+    try {
+      // API 호출로 사용자 정보 불러오기
+      const response = await fetch('/api/settings-info', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include' // 세션 쿠키 포함
+      });
+
+      if (!response.ok) {
+        throw new Error('사용자 정보를 가져오는 데 실패했습니다.');
+      }
+
+      const userInfo = await response.json();
+      usernameField.value = userInfo.username; // 아이디 표시 (readonly)
+      nicknameField.value = userInfo.nickname; // 닉네임 표시
+      passwordField.value = userInfo.password; // 비밀번호 표시
+    } catch (error) {
+      message.innerText = '사용자 정보를 불러오는 중 오류가 발생했습니다.';
+      console.error(error);
+    }
+
+    // 폼 제출 처리
+    document.getElementById('user-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const nickname = nicknameField.value;
+      const password = passwordField.value;
+
+      try {
+        const response = await fetch('/api/update-user', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: usernameField.value,
+            nickname: nickname,
+            password: password,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('정보 수정에 실패했습니다.');
+        }
+        message.innerText = '정보가 성공적으로 수정되었습니다.';
+
+
+      } catch (error) {
+        message.innerText = '정보 수정 중 오류가 발생했습니다.';
+        console.error(error);
+      }
+    });
+  });
+  //비밀번호 숨기기 기능
+  document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordField = document.getElementById('password');
+    passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Review Board</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+      }
+
+      header {
+        background-color: #001f3f;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .notice-bar {
+        background-color: #f4f4f4;
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .notice-bar a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .notice-bar a:hover {
+        text-decoration: underline;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .header .controls {
+        display: flex;
+        gap: 10px;
+      }
+
+      .controls input,
+      .controls button {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .controls button {
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+      }
+
+      .controls button:hover {
+        background-color: #0056b3;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background-color: white;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+
+      table th {
+        background-color: #f4f4f4;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .pagination button {
+        padding: 10px;
+        margin: 0 5px;
+        border: 1px solid #ccc;
+        background-color: white;
+        cursor: pointer;
+      }
+
+      .pagination button.active {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .pagination button:hover {
+        background-color: #f0f0f0;
+      }
+
+      .image-preview {
+        max-width: 100px;
+        max-height: 100px;
+        object-fit: cover;
+      }
+
+      .truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+      }
+
+      .star {
+        color: gold;
+      }
+
+      .empty-star {
+        color: black;
+      }
+
+      .review-row:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+      }
+
+      /* 팝업 모달 스타일 */
+      .notice-bar {
+        background-color: #f4f4f4;
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+        line-height: 1.6;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .notice-bar:hover {
+        background-color: #eaeaea;
+      }
+
+      /* ✅ 모달 스타일 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* 어두운 배경 */
+        z-index: 1000; /* 위에 표시 */
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 800px;
+        width: 80%;
+        text-align: left;
+        position: relative;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        max-height: 90%; /* 최대 높이 제한 */
+        overflow-y: auto; /* 내용이 길 경우 스크롤 */
+      }
+
+      .modal-content h2 {
+        margin-top: 0;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: transparent;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .close-btn:hover {
+        color: red;
+      }
+
+      .controls button {
+        padding: 10px 15px;
+        margin-right: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .controls button:hover {
+        background-color: #0056b3;
+      }
+
+      .controls input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+      .truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>User Review Board</h1>
+    </header>
+    <!-- 박스형 공지사항 -->
+    <!-- ✅ 공지사항 바 (정상적으로 표시됨) -->
+    <div class="notice-bar" onclick="showGuidelines()">
+      <strong>InterQ 리뷰 및 게시판 이용안내</strong> -
+      <span style="color: blue; cursor: pointer;">클릭하여 자세히 보기</span>
+    </div>
+
+    <div id="guidelinesModal" class="modal">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeGuidelines()">×</button>
+        <h2>InterQ 리뷰 및 게시판 이용안내</h2>
+        <div class="modal-body">
+          <p>
+            1. 타인의 의견을 존중해 주세요.
+          <ul>
+            <li>A. 위법한 내용을 제외한, 타인의 의견(생각, 태도, 말투, 취향 등)을 존중해주시길 바랍니다.</li>
+            <li>
+              i. 의견의 차이는 개개인의 존중을 바탕으로, 원색적인 비난, 욕설, 비아냥 등 상대방을 비하하는 내용은 금지합니다.
+            </li>
+            <li>ii. ID, 닉네임 거론하거나 특정인만을 위한 게시글은 금지되어 있습니다.</li>
+            <li>iii. 타 사이트에 대한 비난과 불편사항은 해당 사이트에서 해결해주세요.</li>
+          </ul>
+          </p>
+          <p>
+            2. 게시판 글과 댓글에는 최소한의 예의를 지켜주시길 바랍니다.
+          <ul>
+            <li>A. 혐오물 및 음란물 등 여러 사람에게 불쾌감을 느낄 수 있는 사진이나 글을 올리지 않습니다.</li>
+            <li>B. 비속어, 반말, 음슴체 등 비속어 사용을 금지합니다.</li>
+            <li>C. 게시글과 댓글은 회원 및 비회원도 확인이 가능합니다. 상호 존대말을 기본으로 사용해 주세요.</li>
+          </ul>
+          </p>
+          <p>
+            3. 허가되지 않은 광고 및 홍보글은 절대 금합니다.
+          <ul>
+            <li>A. 허가되지 않은 광고 및 홍보글 작성을 금합니다.</li>
+            <li>B. 회원에게 스팸 메일 또는 스팸 쪽지를 보내 홍보하는 행위를 금합니다.</li>
+          </ul>
+          </p>
+          <p>
+            4. 타인의 권리를 침해하는 게시물은 삭제될 수 있습니다.
+          <ul>
+            <li>A. 사생활 침해나 명예훼손 등 타인의 권리가 침해되었을 경우 삭제 요청에 따라 해당 게시물은 즉시 삭제될 수 있습니다.</li>
+            <li>B. 타인의 저작권을 침해하는 게시물을 금합니다.</li>
+          </ul>
+          </p>
+          <p>
+            5. 1인 1아이디 사용을 원칙으로 합니다.
+          <ul>
+            <li>A. 실명 인증을 할 수 없는 일부 외국 거주 인원을 제외하고는 실명 인증을 통한 회원가입을 하여야 합니다.</li>
+          </ul>
+          </p>
+          <p>
+            6. 신고 버튼 사용을 권장합니다.
+          <ul>
+            <li>A. 게시글과 댓글 등 사이트 규칙에 위반된다고 생각하는 게시글 또는 댓글을 발견할 경우 신고를 부탁드립니다.</li>
+          </ul>
+          </p>
+          <p>
+            7. 게시판 목적에 부합되는 사용을 권장합니다.
+          <ul>
+            <li>A. FREEBOARD: 상기 게시판 이용안내의 내용을 준수합니다.</li>
+            <li>B. Q&A: 질문은 Contact 게시판에 올려주세요.</li>
+          </ul>
+          </p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="container">
+      <div class="header">
+        <h1>User Reviews</h1>
+        <div class="controls">
+          <!-- 정렬 버튼 -->
+          <button onclick="sortReviews('latest')">최신순</button>
+          <button onclick="sortReviews('oldest')">오래된 순</button>
+
+          <!-- 검색 창 -->
+          <input type="text" placeholder="Search reviews" id="searchInput">
+          <button onclick="filterReviews()">Search</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Author</th>
+            <th>Review</th>
+            <th>Rating</th>
+            <th>DATE</th>
+          </tr>
+        </thead>
+        <tbody id="reviewTableBody">
+        <!-- 동적으로 리뷰 데이터가 추가됨 -->
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button onclick="previousPage()">&laquo;</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button onclick="nextPage()">&raquo;</button>
+      </div>
+    </div>
+
+    <!-- 리뷰 상세 모달 -->
+    <div id="reviewModal" class="modal">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeReviewModal()">×</button>
+        <h2>Review Details</h2>
+        <div class="modal-body">
+          <p><strong>Author:</strong> <span id="modalAuthor"></span></p>
+          <p><strong>Rating:</strong> <span id="modalRating"></span></p>
+          <p><strong>Review:</strong></p>
+          <p id="modalText"></p>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      const itemsPerPage = 10; // 한 페이지에 표시할 항목 수
+      let currentPage = 1; // 현재 페이지 번호
+      let reviews = []; // 전체 리뷰 데이터
+      let filteredReviews = []; // 필터링된 리뷰 데이터
+
+      // ✅ 서버에서 리뷰 데이터를 가져오는 함수
+      async function loadReviews() {
+        try {
+          const response = await fetch('/api/reviews');
+          reviews = await response.json();
+          filteredReviews = [...reviews]; // 초기 상태 설정
+
+          currentPage = 1; // 첫 번째 페이지로 설정
+          renderReviews(filteredReviews);
+          updatePagination(filteredReviews.length);
+        } catch (error) {
+          console.error('Error loading reviews:', error);
+        }
+      }
+
+      // ✅ 리뷰 목록을 테이블에 렌더링하는 함수
+      function renderReviews(reviewsToRender) {
+        const tbody = document.getElementById('reviewTableBody');
+        tbody.innerHTML = '';
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedReviews = reviewsToRender.slice(startIndex, endIndex);
+
+        paginatedReviews.forEach(review => {
+          const row = document.createElement('tr');
+          row.classList.add('review-row');
+
+          // ✅ 비공개 리뷰는 🔒 아이콘 표시
+          const lockIcon = review.is_private ? '🔒' : '';
+
+          row.innerHTML = `
+            <td>${maskName(review.author)} ${lockIcon}</td>
+            <td class="truncate">${review.is_private ? '(비공개 리뷰입니다)' : review.text}</td>
+            <td>${generateStars(review.rating)}</td>
+            <td>${formatDate(review.created_at)}</td>
+        `;
+
+          // ✅ 클릭 이벤트를 설정 (비공개 리뷰는 비밀번호 입력)
+          row.onclick = () => {
+            if (review.is_private) {
+              requestPassword(review.id);
+            } else {
+              showFullReview(review);
+            }
+          };
+
+          tbody.appendChild(row);
+        });
+      }
+
+      // ✅ 비공개 리뷰 클릭 시 비밀번호 입력 요청
+      function requestPassword(reviewId) {
+        const password = prompt("비공개 리뷰입니다. 4자리 비밀번호를 입력하세요:");
+
+        if (!password || password.length !== 4) {
+          alert("올바른 4자리 비밀번호를 입력하세요.");
+          return;
+        }
+
+        fetch('/api/reviews/private', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ review_id: reviewId, password }),
+        })
+                .then(response => {
+                  if (response.ok) return response.json();
+                  throw new Error('비밀번호가 올바르지 않습니다.');
+                })
+                .then(review => {
+                  showFullReview(review); // 🔹 비밀번호 검증 성공 시 모달 열기
+                })
+                .catch(error => {
+                  alert(error.message);
+                });
+      }
+
+      // ✅ 리뷰 클릭 시 모달 열기 (비공개 검증 완료된 경우)
+      function showFullReview(review) {
+        document.getElementById('modalAuthor').innerText = review.author;
+        document.getElementById('modalRating').innerHTML = generateStars(review.rating);
+        document.getElementById('modalText').innerText = review.text;
+        document.getElementById('reviewModal').style.display = 'flex';
+      }
+
+      // ✅ 리뷰 모달 닫기
+      function closeReviewModal() {
+        document.getElementById('reviewModal').style.display = 'none';
+      }
+
+      // ✅ 리뷰 검색 필터 (이름 검색)
+      function filterReviews() {
+        const searchInput = document.getElementById('searchInput').value.toLowerCase().trim();
+
+        if (!searchInput) {
+          filteredReviews = [...reviews]; // 검색어 없을 경우 전체 데이터 로드
+        } else {
+          filteredReviews = reviews.filter(review => review.author.toLowerCase().includes(searchInput));
+        }
+
+        currentPage = 1; // 검색 시 첫 페이지로 이동
+        renderReviews(filteredReviews);
+        updatePagination(filteredReviews.length);
+      }
+
+      // ✅ 리뷰 정렬 (최신순 / 오래된 순)
+      function sortReviews(order) {
+        filteredReviews.sort((a, b) => {
+          const dateA = new Date(a.created_at);
+          const dateB = new Date(b.created_at);
+          return order === 'latest' ? dateB - dateA : dateA - dateB;
+        });
+
+        renderReviews(filteredReviews);
+      }
+
+      // ✅ 페이지네이션 업데이트
+      function updatePagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const pagination = document.querySelector('.pagination');
+        pagination.innerHTML = '';
+
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '&laquo;';
+        prevButton.onclick = () => changePage(currentPage - 1);
+        prevButton.disabled = currentPage === 1;
+        pagination.appendChild(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement('button');
+          pageButton.textContent = i;
+          pageButton.className = i === currentPage ? 'active' : '';
+          pageButton.onclick = () => changePage(i);
+          pagination.appendChild(pageButton);
+        }
+
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = '&raquo;';
+        nextButton.onclick = () => changePage(currentPage + 1);
+        nextButton.disabled = currentPage === totalPages;
+        pagination.appendChild(nextButton);
+      }
+
+      // ✅ 페이지 변경
+      function changePage(newPage) {
+        const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
+        if (newPage < 1 || newPage > totalPages) return;
+        currentPage = newPage;
+        renderReviews(filteredReviews);
+        updatePagination(filteredReviews.length);
+      }
+
+      function generateStars(rating) {
+        const filledStars = '<span style="color: gold;">★</span>'.repeat(rating); // 노란색 별
+        const emptyStars = '<span style="color: black;">☆</span>'.repeat(5 - rating); // 검은색 빈 별
+        return filledStars + emptyStars;
+      }
+
+
+      // ✅ 이름 마스킹 (예: 홍길동 -> 홍**)
+      function maskName(name) {
+        return name.length > 1 ? name[0] + '*'.repeat(name.length - 1) : name + '*';
+      }
+
+      // ✅ 날짜 포맷 함수 (YYYY-MM-DD)
+      function formatDate(dateString) {
+        return new Date(dateString).toISOString().split('T')[0];
+      }
+
+      // ✅ 공지사항 모달 열기
+      function showGuidelines() {
+        document.getElementById('guidelinesModal').style.display = 'flex';
+      }
+
+      // ✅ 공지사항 모달 닫기
+      function closeGuidelines() {
+        document.getElementById('guidelinesModal').style.display = 'none';
+      }
+
+
+      // ✅ 초기 로드
+      window.onload = loadReviews;
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 완료</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #001f3f;
+            width: 100%;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+        }
+
+        footer {
+            background-color: ghostwhite;
+            color: black;
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 90px; /* 헤더와의 간격 */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .container h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px; /* 간격 늘림 */
+            animation: fadeInDown 1s;
+        }
+
+        .container p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 40px; /* 간격 늘림 */
+            animation: fadeInDown 1.2s;
+        }
+
+        .checkmark {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            border: 5px solid #5cb85c;
+            border-radius: 50%;
+            position: relative;
+            margin: 30px 0; /* 간격 늘림 */
+            animation: scaleIn 1s forwards;
+        }
+
+        .checkmark::after {
+            content: "";
+            display: block;
+            width: 40px;
+            height: 20px;
+            border: solid #5cb85c;
+            border-width: 0 6px 6px 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg) scale(0);
+            animation: checkmark 1s 0.8s forwards;
+        }
+
+        .container button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px; /* 버튼 위아래 간격 */
+            animation: fadeInUp 1.5s;
+        }
+
+        .container button:hover {
+            background-color: #0056d2;
+        }
+
+        .firework {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            animation: explode 2s ease-out infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(5);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: translate(-50%, -50%) rotate(45deg) scale(0);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(45deg) scale(1);
+            }
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    InterQ
+</header>
+
+<div class="container">
+    <h1>Success!</h1>
+    <p>Your account has been created</p>
+    <div class="checkmark"></div>
+    <button onclick="window.location.href='/login'">다시 로그인하세요</button>
+</div>
+
+<footer>
+    <p>&copy; 2025 Smart AI Interview. All rights reserved.</p>
+    <p>문의: https://www.sungkyul.ac.kr/computer/index.do/짬뽕밥</p>
+    <p>소셜 미디어:
+        <a href="https://www.sungkyul.ac.kr/computer/index.do" style="color: lightblue;">운영진</a> |
+        <a href="#" style="color: lightblue;">Twitter</a> |
+        <a href="#" style="color: lightblue;">Instagram</a>
+    </p>
+</footer>
+
+<script>
+    // 폭죽 애니메이션 설정
+    function createFirework() {
+        const firework = document.createElement("div");
+        firework.classList.add("firework");
+
+        // 랜덤 위치 설정
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+
+        firework.style.left = `${x}px`;
+        firework.style.top = `${y}px`;
+
+        // 랜덤 색상
+        firework.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 50%)`;
+
+        document.body.appendChild(firework);
+
+        // 폭죽은 자동으로 지속됨
+        setTimeout(() => {
+            firework.remove();
+        }, 2000); // 폭죽이 커지고 사라지는 시간
+    }
+
+    // 지속적으로 폭죽 생성
+    setInterval(createFirework, 300);
+</script>
+</body>
+</html>

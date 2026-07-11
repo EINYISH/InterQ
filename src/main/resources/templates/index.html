@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterQ</title>
+    <script src="/js/common.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: #001f3f;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        header h1 {
+            font-family: Charter; /* 원하는 글꼴로 변경 */
+            font-weight: bolder; /* 굵기 */
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        nav button {
+            padding: 10px 15px;
+            background: #001f3f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        nav button:hover {
+            background: lightgray;
+        }
+
+        footer {
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 120%;
+            background-color: ghostwhite;
+            color: black;
+            text-align: center;
+            padding: 15px 15px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+        .section-content {
+            text-align: center;
+            padding: 50px;
+            color: black;
+        }
+
+        .section-content h2 {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .section-content p {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+
+        .section-content button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #ffcc00;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section-content button:hover {
+            background-color: #f2c200;
+        }
+
+        .main-section {
+            background: white;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-reviews {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        .user-reviews-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;  /* 각 리뷰 사이에 간격을 추가 */
+            flex-wrap: wrap;  /* 화면 크기에 맞게 자동으로 줄바꿈되도록 설정 */
+        }
+
+
+        .user-review {
+            flex: 1;
+            margin: 0 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .user-review img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+
+        }
+
+        .user-review h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .user-review p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .user-reviews h1 {
+            font-size: 28px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: black;
+        }
+
+        .user-review:nth-child(1) {
+            background-color: #f1f8fc;
+        }
+
+        .user-review:nth-child(2) {
+            background-color: #eaf7f2;
+        }
+
+        .user-review:nth-child(3) {
+            background-color: #f7f1f1;
+        }
+
+        .how-it-works {
+            background-color: #f4f4f4; /* 화이트그레이 배경 */
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .how-it-works h1 {
+            font-size: 32px;
+            color: black;
+            margin-bottom: 40px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 50px;
+        }
+
+        .step {
+            flex: 1;
+            margin: 0 15px;
+        }
+
+        .circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #001f3f;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        h3 {
+            font-size: 22px;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .interview-simulation {
+            background-color: white;  /* 부드러운 배경색 */
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .interview-simulation h1 {
+            font-size: 32px;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        .interview-simulation h2 {
+            font-size: 24px;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .operation-section {
+            padding: 50px;
+            /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#cedbe9+0,aac5de+9,6199c7+26,4bb8f0+43,419ad6+59,4bb8f0+68,3a8bc2+83,3a8bc2+83,26558b+100 */
+            background: linear-gradient(to right,  rgba(206,219,233,1) 0%,rgba(170,197,222,1) 9%,rgba(97,153,199,1) 26%,rgba(75,184,240,1) 43%,rgba(65,154,214,1) 59%,rgba(75,184,240,1) 68%,rgba(58,139,194,1) 83%,rgba(58,139,194,1) 83%,rgba(38,85,139,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            text-align: center;
+        }
+
+        .operation-section h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .statistics-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 300px; /* 작동 방식 섹션 높이 */
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 250px; /* 카드 크기 */
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-size: cover;
+        }
+
+        .stat-card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #001f3f;
+        }
+
+        .stat-card p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+        .large-title {
+            font-size: 3rem; /* 원하는 크기로 설정 */
+            font-weight: bold; /* 굵기 조절 */
+            color: #333; /* 색상 설정 */
+        }
+        .divider {
+            width: 100%;
+            height: 2px;
+            background-color: #001f3f;
+            margin: 5px 0; /* 상하 간격을 설정 */
+        }
+        #auth-status button {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #f7f9fc;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #auth-status button:hover {
+            background: lightgray;
+        }
+
+        #auth-status button[disabled] {
+            background: #f0f0f0;
+            cursor: default;
+            color: #555;
+            border-color: #ddd;
+        }
+
+        .btn-review {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-review:hover {
+            background-color: #f2c200; /* 밝은 파랑 */
+        }
+        .write-review {
+            text-align: left; /* 왼쪽 정렬 */
+            margin-top: 10px;
+        }
+
+        .dots-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .dot {
+            height: 15px;
+            width: 15px;
+            margin: 5px;
+            background-color: #ccc;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .dot:hover {
+            background-color: #007BFF;
+        }
+
+        /* 초기 숨김 효과 */
+        section.hidden {
+            opacity: 0;
+            transform: translateY(30px); /* 아래에서 위로 올라오는 느낌 */
+            transition: opacity 1s ease, transform 1s ease; /* 부드러운 전환 */
+        }
+
+        /* 화면에 보일 때 활성화 */
+        section.visible {
+            opacity: 1;
+            transform: translateY(0); /* 제자리로 이동 */
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h1>InterQ</h1>
+    <nav>
+        <button onclick="goToPage('home')">Home</button>
+        <button onclick="window.location.href='/upload'">이력서 업로드</button>
+        <button onclick="window.location.href='/feedback'">이력서 Feedback</button>
+        <button onclick="goToPage('contact')">Contact</button>
+        <button onclick="window.location.href='/login'">login</button>
+        <span id="header-nickname" style="display: none; cursor: pointer;" ></span>
+    </nav>
+</header>
+
+
+<section class="main-section">
+    <div class="section-content">
+        <h2>인터뷰 면접 기술을 지금 체크하세요!</h2>
+        <p>좋은 면접 피드백으로 취업 기회에 활용하세요.</p>
+        <p>취업준비생들의 면접 후기를 나누세요.</p>
+        <button onclick="window.location.href='/upload'">지금 무료로 이용해보세요</button>
+    </div>
+</section>
+<div class="divider"></div>
+<section class="user-reviews">
+    <h1>InterQ를 사용하여 면접에서 성공한 수천 명의 사용자와 함께 후기를 나누세요.</h1>
+    <div class="user-reviews-container">
+        <div class="user-review">
+            <img src="/images/user.jpg" alt="User 1">
+            <h3>김00</h3>
+            <p class="review-text">AI 분석 덕분에 내 강점과 약점을 명확하게 파악할 수 있었고, 면접 때 긴장이 덜했어요. 피드백 덕분에 면접 준비가 정말 많이 도움이 됐습니다.</p>
+        </div>
+        <div class="user-review">
+            <img src="/images/user.jpg" alt="User 2">
+            <h3>이00</h3>
+            <p class="review-text">AI 기술로 면접 질문과 답변 분석을 받을 수 있어 신선한 경험이었어요. 어색할 줄 알았는데, 질문 텀도 적절하고 정말 현실적인 시뮬레이션이었어요.</p>
+        </div>
+        <div class="user-review">
+            <img src="/images/user.jpg" alt="User 3">
+            <h3>박00</h3>
+            <p class="review-text">면접 질문이 직무와 관련성이 높아서 실제 면접 준비에 큰 도움이 됐어요. 특히 AI가 제 답변을 분석하고 피드백을 제공한 부분이 좋았습니다!</p>
+        </div>
+    </div>
+    <!-- 후기 작성하기 버튼 -->
+    <div class="write-review">
+        <button onclick="window.location.href='/review-board'" class="btn-review">유저 게시판</button>
+        <button onclick="window.location.href='/write-review'" class="btn-review">후기 작성하기</button>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="section-content">
+        <h1>InterQ의 작동방식</h1>
+        <div class="steps">
+            <div class="step">
+                <div class="circle">1</div>
+                <h3>사용자의 이력서 작성</h3>
+                <p>면접 준비를 위한 기본적인 양식을 작성하고 사용자의 이력서를 입력하면 AI가 그에 맞춰 질문을 생성하는 방식입니다.</p>
+            </div>
+            <div class="step">
+                <div class="circle">2</div>
+                <h3>AI를 기반한 면접 시작</h3>
+                <p>카메라가 활성화하여, 사용자의 이력서와 예상질문을 종합하여 AI가 질문하면 실전 같은 면접 연습을 할 수 있게 합니다.</p>
+            </div>
+            <div class="step">
+                <div class="circle">3</div>
+                <h3>AI의 면접 영상 피드백</h3>
+                <p>면접 영상에 관한 AI 피드백을 받으며 답변을 개선하는 방법을 제공합니다.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="interview-simulation">
+    <div class="section-content">
+        <h1>AI 면접은 이렇게 진행됩니다!</h1>
+        <h1 style="color:#007BFF">실제처럼 연습을 해보세요</h1>
+        <p>구직 면접에서 성공하려면 문제 해결, 커뮤니케이션, 톤분석, 시선처리, 기술적 적성 등 많은 기술이 필요합니다. 저희가 준비한 면접 피드백 을 활용하세요.</p>
+        <div class="laptop-container">
+            <img id="laptop-screen" src="images/simulation.png" alt="AI Interview Simulation" style="max-width: 65%; height: auto;">
+            <div class="dots-container">
+                <span class="dot" onclick="changeSlide(0)"></span>
+                <span class="dot" onclick="changeSlide(1)"></span>
+                <span class="dot" onclick="changeSlide(2)"></span>
+            </div>
+        </div>
+
+        <h2>면접의 모든 과정을 AI가 분석하고 피드백합니다.</h2>
+    </div>
+</section>
+
+<section class="operation-section">
+    <h1 class="large-title">실제로 많은 사람들이 사용하고 있어요!</h1>
+    <div class="statistics-container">
+        <div class="stat-card">
+            <img src="/images/userimage.png" alt="사용자 수">
+            <h3>사용자 수</h3>
+            <p>10,000명 이상이 참여했습니다.</p>
+        </div>
+        <div class="stat-card">
+            <img src="/images/analysis.png" alt="분석량">
+            <h3>분석량</h3>
+            <p>AI가 50만 건 이상의 데이터를 분석했습니다.</p>
+        </div>
+        <div class="stat-card">
+            <img src="/images/success.jpg" alt="성공률">
+            <h3>취업 성공률</h3>
+            <p>면접 성공률이 85% 향상되었습니다.</p>
+        </div>
+    </div>
+</section>
+
+
+<footer>
+    <p>&copy; 2025 Smart AI Interview. All rights reserved.</p>
+    <p>문의: https://www.sungkyul.ac.kr/computer/index.do/짬뽕밥</p>
+    <p>소셜 미디어:
+        <a href="https://www.sungkyul.ac.kr/computer/index.do" style="color: lightblue;">운영진</a> |
+        <a href="#" style="color: lightblue;">Twitter</a> |
+        <a href="#" style="color: lightblue;">Instagram</a>
+    </p>
+</footer>
+<script>
+    function goToPage(page) {
+        if (page === 'home') {
+            alert('현재 페이지입니다.');
+        } else if (page === 'upload') {
+            window.location.href = '/upload.html';
+        } else if (page === 'feedback') {
+            window.location.href = '/feedback.html';
+        } else if (page === 'contact') {
+            alert('문의하기 페이지는 준비 중입니다.');
+        }else if (page === 'login') { // 로그인 페이지 추가
+                window.location.href = '/login';
+        }
+    }
+    // 섹션 애니메이션 추가 부분
+    document.addEventListener('DOMContentLoaded', function () {
+        const sections = document.querySelectorAll('section');
+
+        // Intersection Observer 설정
+        const observerOptions = {
+            threshold: 0.2, // 섹션이 20% 보일 때 활성화
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    // 섹션이 화면에 보일 때 애니메이션 효과 추가
+                    entry.target.classList.add('visible');
+                } else {
+                    // 화면에서 벗어나면 클래스 제거
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach((section) => {
+            section.classList.add('hidden'); // 초기 상태에서 숨김
+            observer.observe(section);
+        });
+    });
+
+
+
+    const images = [
+        "images/simulation1.png",
+        "images/simulation2.png",
+        "images/simulation3.png"
+    ];
+
+    function changeSlide(index) {
+        const laptopScreen = document.getElementById("laptop-screen");
+        laptopScreen.src = images[index];
+    }
+
+
+</script>
+</body>
+</html>

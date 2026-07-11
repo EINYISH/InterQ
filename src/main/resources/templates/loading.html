@@ -1,0 +1,46 @@
+<!-- ✅ loading.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 분석 중...</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .loader {
+      border: 10px solid #f3f3f3;
+      border-top: 10px solid #007BFF;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+<h1>AI가 면접 분석 중입니다...</h1>
+<div class="loader"></div>
+<script>
+  // 3초 후 자동 이동
+  setTimeout(() => {
+    window.location.href = "/feedback";
+  }, 3000);
+</script>
+</body>
+</html>

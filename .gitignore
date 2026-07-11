@@ -1,0 +1,50 @@
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### Java ###
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+
+### Node / npm (chart.js 등) ###
+node_modules/
+npm-debug.log*
+package-lock.json
+
+### 실제 업로드/생성 데이터 (커밋하면 안 되는 것들) ###
+uploads/
+videos/
+
+### 환경설정 / 비밀정보 ###
+application-local.properties
+application-secret.properties
+.env
+*.env
+
+### 로그 ###
+*.log
+logs/
+
+### 기타 임시 파일 ###
+*.tmp
+*.bak

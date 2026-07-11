@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>면접 시뮬레이션</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <!-- JS 파일들 -->
+    <script src="/js/feedback-fetch.js" defer></script>
+    <script src="/js/feedback-chart.js" defer></script>
+    <script src="/js/feedback-ui.js" defer></script>
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #dddddd;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #001f3f;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+        }
+
+        header h1 {
+            font-family: Charter;
+            font-weight: bolder;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav {
+            display: flex;
+            gap: 12.5px;
+        }
+
+        nav button {
+            padding: 10px 15px;
+            background: #001f3f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        nav button:hover {
+            background: lightgray;
+        }
+
+        .content {
+            margin: 100px auto;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.expanded {
+            transform: scale(1.1); /* 카드 확대 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 강조 효과 */
+        }
+
+        footer {
+            background-color: ghostwhite;
+            color: black;
+            padding: 20px;
+            margin-top: 40px;
+            width: 100%;
+            text-align: center;
+        }
+
+        footer a {
+            color: lightblue;
+            text-decoration: none;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 100px auto; /* 자동으로 좌우 정렬 */
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: black;
+            background-color: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .buttons button:hover {
+            background-color: #f2c200;
+        }
+
+        /* 알림 스타일 */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            padding: 15px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            display: none; /* 초기에는 숨김 */
+            z-index: 1000;
+        }
+
+        .notification p {
+            margin: 0 0 10px;
+        }
+
+        .notification button {
+            padding: 8px 12px;
+            font-size: 14px;
+            background-color: #ffcc00;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .notification button:hover {
+            background-color: #f2c200;
+        }
+
+        #subscription-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%; /* 결과 섹션의 너비에 맞게 조정 */
+            max-width: 800px; /* 최대 크기 */
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            padding: 20px;
+            text-align: center;
+            justify-content: space-around;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .popup-content img {
+            width: 100%; /* 이미지가 팝업 너비를 채우도록 설정 */
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .subscription-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 30%; /* 탭 크기 */
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .subscription-tab:hover {
+            transform: scale(1.05); /* 확대 효과 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+        }
+
+        .subscription-tab img {
+            width: 50px; /* 아이콘 크기 */
+            margin-bottom: 10px;
+        }
+
+        .subscription-tab p {
+            font-size: 14px;
+            color: #333;
+        }
+
+
+        .feedback-text {
+            font-size: 18px;
+            line-height: 1.8; /* 줄 간격 조정 */
+            color: #333;
+            white-space: pre-wrap; /* HTML 줄 바꿈 반영 */
+            margin-bottom: 20px; /* 문단 간 간격 추가 */
+        }
+
+        /* 점수 카드 배치 */
+        #score-cards {
+            margin: 120px auto 0px auto; /* 헤더와 간격 늘리고 텍스트 카드와 간격 줄임 */
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-align: center;
+            gap: 20px; /* 카드 간 간격 */
+        }
+
+        .card:nth-child(1) {
+            background-color: #f8fbff; /* 종합 결과: 매우 옅은 파란색 */
+        }
+        .card:nth-child(2) {
+            background-color: #fffafa; /* 직무 역량: 매우 옅은 빨간색 */
+        }
+        .card:nth-child(3) {
+            background-color: #fafffa; /* 톤 분석: 매우 옅은 초록색 */
+        }
+        #competencyChart{
+            margin: 0 auto; /* 차트를 카드 중앙에 정렬 */
+        }
+        #toneChart{
+            margin: 0 auto; /* 차트를 카드 중앙에 정렬 */
+        }
+        #overallChart{
+            margin: 0 auto; /* 차트를 카드 중앙에 정렬 */
+        }
+        #facialEngagementChart {
+            display: block;
+            margin: 20px auto; /* 중앙 정렬 */
+            width: 300px !important; /* 크기 조정 */
+            height: 300px !important; /* 크기 조정 */
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h1>InterQ</h1>
+    <nav>
+        <button onclick="goToPage('home')">Home</button>
+        <button onclick="window.location.href='/upload'">이력서 Upload</button>
+        <button onclick="window.location.href='/feedback'">이력서 Feedback</button>
+        <button onclick="goToPage('contact')">Contact</button>
+        <button onclick="window.location.href='/login'">login</button>
+    </nav>
+</header>
+
+<div id="score-cards">
+    <div class="card">
+        <h2 id="overall-score-text">종합 결과</h2>
+        <canvas id="overallChart" width="150" height="150"></canvas>
+        <p>전체적인 면접 결과를 종합한 점수입니다.</p>
+    </div>
+    <div class="card">
+        <h2 id="competency-score-text">직무 역량</h2>
+        <canvas id="competencyChart" width="150" height="150"></canvas>
+        <p>직무와 관련된 역량을 평가한 점수입니다.</p>
+    </div>
+    <div class="card">
+        <h2 id="tone-score-text">톤 분석</h2>
+        <canvas id="toneChart" width="150" height="150"></canvas>
+        <p>목소리 톤과 표현력을 평가한 점수입니다.</p>
+    </div>
+</div>
+
+<div class="content">
+    <div class="card">
+        <div id="feedback-container">
+            <h2>면접 피드백을 불러오는 중...</h2>
+        </div>
+    </div>
+    <div class="card">
+        <h2>시선처리</h2>
+        <canvas id="eyeTrackingGraph" width="400" height="200"></canvas>
+        <p style="text-align: center">시선 처리 능력 그래프입니다.</p>
+        <canvas id="facialEngagementChart" width="300" height="300"></canvas>
+        <p style="text-align: center">얼굴 표현 점수입니다.</p>
+    </div>
+    <div class="card">
+        <div id="tone-analysis-container"></div>
+    </div>
+    <div class="card">
+        <div id="job-competency-container"></div>
+    </div>
+</div>
+</body>
+</html>

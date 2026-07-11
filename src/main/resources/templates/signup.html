@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+  <script src="/js/signup.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+    }
+
+    header {
+      background-color: #001f3f;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 24px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      font-weight: bold;
+    }
+
+    .signup-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      margin-top: 100px;
+    }
+
+    .signup-container h1 {
+      font-size: 28px;
+      margin-bottom: 40px;
+      color: black;
+      text-align: center;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #007BFF;
+    }
+
+    .form-group .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      color: #007BFF;
+    }
+
+    .agreement-section {
+      margin: 20px 0;
+    }
+
+    .agreement-section label {
+      display: block;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .agreement-section input {
+      margin-right: 10px;
+    }
+
+    .signup-container button {
+      width: 100%;
+      padding: 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .signup-container button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    footer {
+      background-color: ghostwhite;
+      color: black;
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 14px;
+      position: relative;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  InterQ
+</header>
+
+<div class="signup-container">
+  <h1>회원가입</h1>
+  <form id="signup-form">
+    <div class="form-group">
+      <input type="text" name="username" placeholder="아이디 (7자 이상)" minlength="7" required>
+    </div>
+    <div class="form-group">
+      <input type="text" name="nickname" placeholder="닉네임" required>
+    </div>
+    <div class="form-group">
+      <input type="password" name="password" placeholder="비밀번호 (8자 이상)" required>
+      <span class="toggle-password" onclick="togglePassword(this)">👁️</span>
+    </div>
+    <div class="form-group">
+      <input type="password" name="confirm-password" placeholder="비밀번호 확인" required>
+      <span class="toggle-password" onclick="togglePassword(this)">👁️</span>
+    </div>
+    <div class="agreement-section">
+      <label><input type="checkbox" id="agree-all"> 전체 동의</label>
+      <label><input type="checkbox" class="agree" required> 서비스 이용약관 동의 (필수)</label>
+      <label><input type="checkbox" class="agree" required> 개인정보처리방침 동의 (필수)</label>
+      <label><input type="checkbox" class="agree"> 마케팅 활용 동의 (선택)</label>
+    </div>
+    <button type="submit" class="submit-btn" disabled>회원가입</button>
+  </form>
+</div>
+
+<footer>
+  <p>&copy; 2025 Smart AI Interview. All rights reserved.</p>
+</footer>
+
+<script>
+  const agreeAll = document.getElementById('agree-all');
+  const agreeCheckboxes = document.querySelectorAll('.agree');
+  const submitBtn = document.querySelector('.submit-btn');
+
+  // 전체 동의 체크박스 제어
+  agreeAll.addEventListener('change', function () {
+    agreeCheckboxes.forEach(checkbox => {
+      checkbox.checked = agreeAll.checked;
+    });
+    toggleSubmitButton();
+  });
+
+  // 개별 체크박스 제어
+  agreeCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function () {
+      agreeAll.checked = Array.from(agreeCheckboxes).every(checkbox => checkbox.checked);
+      toggleSubmitButton();
+    });
+  });
+
+  // 제출 버튼 활성화/비활성화
+  function toggleSubmitButton() {
+    const allRequiredChecked = Array.from(agreeCheckboxes)
+            .filter(checkbox => checkbox.required)
+            .every(checkbox => checkbox.checked);
+
+    submitBtn.disabled = !allRequiredChecked;
+  }
+
+  // 비밀번호 보기/숨기기 기능
+  function togglePassword(element) {
+    const input = element.previousElementSibling;
+    if (input.type === 'password') {
+      input.type = 'text';
+      element.textContent = '🙈';
+    } else {
+      input.type = 'password';
+      element.textContent = '👁️';
+    }
+  }
+
+  // 회원가입 제출 이벤트
+  document.getElementById('signup-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+    const confirmPassword = event.target['confirm-password'].value;
+    const nickname = event.target.nickname.value;
+
+    if (username.length < 7) {
+      alert('아이디는 7자 이상이어야 합니다.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password, nickname })
+      });
+
+      const result = await response.text();
+
+      if (response.ok) {
+        alert(result); // 회원가입 성공 메시지
+        window.location.href = "/signup-success";
+      } else {
+        alert("회원가입 실패: " + result);
+      }
+    } catch (error) {
+      console.error("회원가입 오류:", error);
+      alert("회원가입 중 오류가 발생했습니다.");
+    }
+  });
+</script>
+</body>
+</html>

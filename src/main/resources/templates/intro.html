@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InterQ Intro</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #ffffff, #ffffff); /* 초기 흰색 */
+        animation: backgroundTransition 2.5s ease-in-out forwards; /* 자연스러운 배경 전환 */
+        font-family: 'Poppins', sans-serif; /* 둥근 폰트 */
+      }
+
+      .logo {
+        display: flex;
+        font-size: 6rem;
+        font-weight: 900;
+        gap: 5px;
+        letter-spacing: -2px;
+      }
+
+      .logo span {
+        opacity: 0;
+        color: #001f3f; /* 기본 색상 */
+        animation: fadeIn 0.5s ease forwards;
+      }
+
+      /* SVG 스타일 */
+      .logo svg {
+        width: 60px;
+        height: 60px;
+        stroke: #ffcc00; /* Q의 색상 */
+        stroke-width: 12;
+        fill: none;
+        stroke-dasharray: 314; /* 선 길이 */
+        stroke-dashoffset: 314; /* 시작점 */
+        animation: drawQ 2s ease forwards 1s; /* Q 그리기 애니메이션 */
+      }
+
+      .logo svg path:last-child {
+        transform-origin: center;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+        animation: drawQLine 1s ease forwards 2s; /* 내부 선 길이 애니메이션 */
+      }
+
+      .logo span:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .logo span:nth-child(2) {
+        animation-delay: 0.3s;
+      }
+      .logo span:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+      .logo span:nth-child(4) {
+        animation-delay: 0.9s;
+      }
+      .logo span:nth-child(5) {
+        animation-delay: 1.2s;
+      }
+
+      /* Q 내부의 선 */
+      .logo .q::after {
+        content: '';
+        position: absolute;
+        width: 60%; /* 내부 선의 길이 */
+        height: 6px;
+        background: #ffcc00;
+        transform: rotate(45deg); /* 선의 각도 */
+        transform-origin: left;
+      }
+
+      /* Q 모양 */
+      .logo .q {
+        position: relative;
+        width: 80px; /* Q의 크기 조정 */
+        height: 80px;
+        border: 8px solid #ffcc00; /* Q 테두리 */
+        border-radius: 50%; /* 원형 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 900;
+        font-size: 3rem;
+      }
+
+      /* Q 그리기 키프레임 */
+      @keyframes drawQ {
+        0% {
+          stroke-dashoffset: 314;
+        }
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @keyframes drawQLine {
+        0% {
+          stroke-dashoffset: 50;
+        }
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes transformToQ {
+        0% {
+          content: 'O';
+        }
+        100% {
+          content: 'Q';
+        }
+      }
+
+      /* 100단계 세분화된 배경 전환 */
+
+      @keyframes backgroundTransition {
+        0% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 1),
+            rgba(255, 255, 255, 1)
+          ); /* 초기 흰색 */
+        }
+        5% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.95),
+            rgba(0, 31, 63, 0.05)
+          );
+        }
+        10% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.9),
+            rgba(0, 31, 63, 0.1)
+          );
+        }
+        15% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.85),
+            rgba(0, 31, 63, 0.15)
+          );
+        }
+        20% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.8),
+            rgba(0, 31, 63, 0.2)
+          );
+        }
+        25% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.75),
+            rgba(0, 31, 63, 0.25)
+          );
+        }
+        30% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.7),
+            rgba(0, 31, 63, 0.3),
+            rgba(255, 204, 0, 0.1)
+          );
+        }
+        35% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.65),
+            rgba(0, 31, 63, 0.35),
+            rgba(255, 204, 0, 0.15)
+          );
+        }
+        40% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.6),
+            rgba(0, 31, 63, 0.4),
+            rgba(255, 204, 0, 0.2)
+          );
+        }
+        45% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.55),
+            rgba(0, 31, 63, 0.45),
+            rgba(255, 204, 0, 0.25)
+          );
+        }
+        50% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.5),
+            rgba(0, 31, 63, 0.5),
+            rgba(255, 204, 0, 0.3)
+          );
+        }
+        100% {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.5),
+            rgba(0, 31, 63, 0.5),
+            rgba(255, 204, 0, 0.3)
+          ); /* 최종 상태 */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <span>I</span>
+      <span>N</span>
+      <span>T</span>
+      <span>E</span>
+      <span>R</span>
+      <!-- Q -->
+      <svg viewBox="0 0 100 100">
+        <!-- 원형 경로 -->
+        <path
+          d="M50,10
+             A40,40 0 1,1 50,90
+             A40,40 0 1,1 50,10"
+        />
+        <!-- 내부 선 -->
+        <path d="M55,55 L90,90" />
+      </svg>
+    </div>
+    <script>
+      setTimeout(() => {
+        window.location.href = '/index';
+      }, 3000); // 3초 후 index.html로 이동
+    </script>
+  </body>
+</html>
