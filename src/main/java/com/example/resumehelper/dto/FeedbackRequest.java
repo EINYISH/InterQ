@@ -8,7 +8,4 @@ public class FeedbackRequest {
     private Long userId;
     private String feedbackText;
     private String jobCompetency;
-    private String toneAnalysis;
-    private String eyeTracking;
-    private String facialExpression;
 }

@@ -4,7 +4,6 @@ function renderFeedbackUI() {
 
     const feedbackContainer = document.getElementById("feedback-container");
     const jobContainer = document.getElementById("job-competency-container");
-    const toneContainer = document.getElementById("tone-analysis-container");
 
     // 종합 피드백
     const feedbackParagraphs = (data.feedbackText || "").split(/(?<=\.)\s+/);
@@ -22,14 +21,5 @@ function renderFeedbackUI() {
         const para = document.createElement("p");
         para.innerHTML = p.trim().replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
         jobContainer.appendChild(para);
-    });
-
-    // 톤 분석
-    const toneParagraphs = (data.toneAnalysis || "").split("\n");
-    toneContainer.innerHTML = `<h2>톤 감정 분석</h2>`;
-    toneParagraphs.forEach(p => {
-        const para = document.createElement("p");
-        para.innerHTML = p.trim().replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-        toneContainer.appendChild(para);
     });
 }

@@ -31,18 +31,6 @@ public class InterviewFeedback {
     @JsonProperty("jobCompetency")
     private String jobCompetency;
 
-    @Column(name = "tone_analysis", columnDefinition = "TEXT")
-    @JsonProperty("toneAnalysis")
-    private String toneAnalysis;
-
-    @Column(name = "eye_tracking", columnDefinition = "TEXT")
-    @JsonProperty("eyeTracking")
-    private String eyeTracking;
-
-    @Column(name = "facial_expression", columnDefinition = "TEXT")
-    @JsonProperty("facialExpression")
-    private String facialExpression;
-
     @Column(name = "created_at")
     @JsonProperty("createdAt")
     private LocalDateTime createdAt;

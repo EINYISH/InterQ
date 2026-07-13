@@ -44,18 +44,10 @@ document.getElementById("check-feedback").addEventListener("click", async functi
         body: JSON.stringify({ userId: userId })
     });
 
-    // 톤 분석 요청
-    const toneResponse = await fetch("/api/feedback/tone-analysis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userId })
-    });
-
     let feedbackData = await feedbackResponse.json();
     let jobData = await jobResponse.json();
-    let toneData = await toneResponse.json();
 
-    if (!feedbackData.response || !jobData.response || !toneData.response) {
+    if (!feedbackData.response || !jobData.response) {
         console.log("❌ [LOG] GPT 피드백 생성 실패 - response 필드 없음.");
         alert("❌ GPT 피드백 생성에 실패했습니다.");
         updateButtonState(checkFeedbackButton, false, "Check the Feedback");
@@ -63,53 +55,6 @@ document.getElementById("check-feedback").addEventListener("click", async functi
     }
 
     console.log("✅ [LOG] GPT 피드백 생성 완료: " + feedbackData.response);
-
-    updateButtonState(checkFeedbackButton, true, "영상 분석 중...");
-
-    // GPT Vision API 요청
-    console.log("📌 [LOG] GPT Vision API 요청 중...");
-    let videoAnalysisResponse = await fetch("/api/feedback/video-analysis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userId })
-    });
-
-    // 응답 상태 확인
-    if (!videoAnalysisResponse.ok) {
-        console.log("❌ [LOG] 서버 응답 오류:", videoAnalysisResponse.status);
-        alert("❌ 영상 분석 요청 실패.");
-        updateButtonState(checkFeedbackButton, false, "Check the Feedback");
-        return;
-    }
-
-    let videoAnalysisData = await videoAnalysisResponse.json();
-    console.log("✅ [LOG] GPT Vision 응답 데이터:", videoAnalysisData);
-
-    // 시선 집중도 및 얼굴 표현 점수 파싱
-    let eyeTrackingRaw = videoAnalysisData.eyeTracking;
-    let eyeTrackingFrames = Array.isArray(eyeTrackingRaw) ? eyeTrackingRaw : eyeTrackingRaw.split(",").map(val => parseInt(val.trim(), 10));
-
-    let facialExpressionRaw = videoAnalysisData.facialExpression || "";
-    let facialExpressionMatch = facialExpressionRaw.match(
-        /자신감:\s*(\d+)[\s\S]*?호감도:\s*(\d+)[\s\S]*?긴장:\s*(\d+)[\s\S]*?편안함:\s*(\d+)[\s\S]*?집중력:\s*(\d+)/
-    );
-
-    if (!facialExpressionMatch || facialExpressionMatch.length < 6) {
-        alert("❌ 얼굴 표현 분석 실패.");
-        updateButtonState(checkFeedbackButton, false, "Check the Feedback");
-        return;
-    }
-
-    let facialExpressions = {
-        confidence: parseInt(facialExpressionMatch[1], 10),
-        likability: parseInt(facialExpressionMatch[2], 10),
-        tension: parseInt(facialExpressionMatch[3], 10),
-        comfort: parseInt(facialExpressionMatch[4], 10),
-        focus: parseInt(facialExpressionMatch[5], 10),
-    };
-
-    console.log("✅ [LOG] 시선 집중도:", eyeTrackingFrames);
-    console.log("✅ [LOG] 얼굴 표현 점수:", facialExpressions);
 
     updateButtonState(checkFeedbackButton, false, "Check the FeedBack");
 
@@ -119,9 +64,8 @@ document.getElementById("check-feedback").addEventListener("click", async functi
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             userId: userId,
-            feedbackText: feedbackData.response, // 피드백 내용
+            feedbackText: feedbackData.response, // 답변 내용 피드백
             jobCompetency: jobData.response,    // 직무 역량 분석
-            toneAnalysis: toneData.response,    // 톤 분석
         })
     });
 
@@ -132,7 +76,7 @@ document.getElementById("check-feedback").addEventListener("click", async functi
         console.log("✅ [LOG] GPT 피드백 DB 저장 완료");
     }
 
-    alert("✅ GPT Vision 분석이 완료되었습니다!");
+    alert("✅ 면접 답변 분석이 완료되었습니다!");
     window.location.href = "/loading";
 });
 

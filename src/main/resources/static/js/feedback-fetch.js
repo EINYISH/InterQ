@@ -9,8 +9,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         window.feedbackData = data;
 
         console.log("✅ 서버에서 받은 데이터:", data);
-        console.log("👀 eyeTracking 값:", data.eyeTracking);
-
 
         renderFeedbackUI(); // 텍스트 출력
         renderFeedbackCharts(); // 차트 렌더링
@@ -18,5 +16,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.log("✅ 피드백 데이터 로드 완료");
     } catch (e) {
         console.error("❌ 피드백 불러오기 실패:", e);
+    }
+
+    // 본인 다시보기용 시뮬레이션 영상 로드 (분석 없이 재생만)
+    const playbackVideo = document.getElementById("playback-video");
+    if (playbackVideo) {
+        playbackVideo.src = `/api/videos/latest/${userId}`;
     }
 });

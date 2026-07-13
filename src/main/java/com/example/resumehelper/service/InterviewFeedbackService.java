@@ -64,25 +64,7 @@ public class InterviewFeedbackService {
         }
     }
 
-    // 3. 톤 분석
-    public ResponseEntity<Map<String, Object>> generateToneAnalysis(Long userId) {
-        try {
-            Optional<AudioFile> optionalAudio = audioFileRepository
-                    .findTopByUserIdAndTranscriptionIsNotNullOrderByCreatedAtDesc(userId);
-
-            if (optionalAudio.isEmpty() || optionalAudio.get().getTranscription().trim().isEmpty()) {
-                return error("분석할 텍스트가 없습니다.");
-            }
-
-            String content = gptApiClient.send(FeedbackPrompt.TONE_PROMPT, optionalAudio.get().getTranscription());
-            return ResponseEntity.ok(Map.of("response", content));
-
-        } catch (Exception e) {
-            return error("톤 분석 실패: " + e.getMessage());
-        }
-    }
-
-    // 4. 직접 텍스트 입력해서 피드백 생성
+    // 3. 직접 텍스트 입력해서 피드백 생성
     public ResponseEntity<Map<String, Object>> generateFeedbackDirect(String text) {
         try {
             if (text == null || text.trim().isEmpty()) {
@@ -97,23 +79,22 @@ public class InterviewFeedbackService {
         }
     }
 
-    // 5. 최신 인터뷰 피드백 가져오기
+    // 4. 최신 인터뷰 피드백 가져오기
     public InterviewFeedback getLatestFeedbackByUserId(Long userId) {
         return feedbackRepository.findTopByUserIdOrderByCreatedAtDesc(userId)
                 .orElse(null);
     }
 
-    // 6. 피드백 저장
-    public void saveAllFeedback(Long userId, String feedbackText, String jobCompetency, String toneAnalysis) {
+    // 5. 피드백 저장
+    public void saveAllFeedback(Long userId, String feedbackText, String jobCompetency) {
         InterviewFeedback latest = feedbackRepository.findTopByUserIdOrderByCreatedAtDesc(userId)
                 .orElse(null);
 
         if (latest != null) {
             latest.setFeedbackText(feedbackText);
             latest.setJobCompetency(jobCompetency);
-            latest.setToneAnalysis(toneAnalysis);
 
-            feedbackRepository.save(latest); //
+            feedbackRepository.save(latest);
         }
     }
 

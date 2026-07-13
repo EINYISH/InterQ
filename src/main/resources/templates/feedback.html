@@ -6,7 +6,6 @@
     <title>면접 시뮬레이션</title>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
     <!-- JS 파일들 -->
     <script src="/js/feedback-fetch.js" defer></script>
@@ -266,17 +265,15 @@
         #competencyChart{
             margin: 0 auto; /* 차트를 카드 중앙에 정렬 */
         }
-        #toneChart{
-            margin: 0 auto; /* 차트를 카드 중앙에 정렬 */
-        }
         #overallChart{
             margin: 0 auto; /* 차트를 카드 중앙에 정렬 */
         }
-        #facialEngagementChart {
+        #playback-video {
             display: block;
-            margin: 20px auto; /* 중앙 정렬 */
-            width: 300px !important; /* 크기 조정 */
-            height: 300px !important; /* 크기 조정 */
+            width: 100%;
+            max-width: 480px;
+            margin: 12px auto;
+            border-radius: 8px;
         }
 
     </style>
@@ -304,11 +301,6 @@
         <canvas id="competencyChart" width="150" height="150"></canvas>
         <p>직무와 관련된 역량을 평가한 점수입니다.</p>
     </div>
-    <div class="card">
-        <h2 id="tone-score-text">톤 분석</h2>
-        <canvas id="toneChart" width="150" height="150"></canvas>
-        <p>목소리 톤과 표현력을 평가한 점수입니다.</p>
-    </div>
 </div>
 
 <div class="content">
@@ -318,14 +310,9 @@
         </div>
     </div>
     <div class="card">
-        <h2>시선처리</h2>
-        <canvas id="eyeTrackingGraph" width="400" height="200"></canvas>
-        <p style="text-align: center">시선 처리 능력 그래프입니다.</p>
-        <canvas id="facialEngagementChart" width="300" height="300"></canvas>
-        <p style="text-align: center">얼굴 표현 점수입니다.</p>
-    </div>
-    <div class="card">
-        <div id="tone-analysis-container"></div>
+        <h2>면접 영상 다시보기</h2>
+        <video id="playback-video" controls preload="metadata"></video>
+        <p style="text-align: center">녹화된 영상은 분석 없이 본인 다시보기 용도로만 제공됩니다.</p>
     </div>
     <div class="card">
         <div id="job-competency-container"></div>
