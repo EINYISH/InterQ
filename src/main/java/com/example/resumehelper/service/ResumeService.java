@@ -17,7 +17,7 @@ public class ResumeService {
     }
 
     @Transactional
-    public Resume saveResume(Map<String, String> resumeData) {
+    public Resume saveResume(Map<String, String> resumeData, Long userId) {
         Resume resumes = new Resume();
 
         // 기본 정보
@@ -49,7 +49,7 @@ public class ResumeService {
         // 자기소개 & 기타
         resumes.setSelfIntroduction(resumeData.get("selfIntroduction"));
         resumes.setGptResponse(resumeData.getOrDefault("gptResponse", ""));
-        resumes.setUserId(1L); // 예시: 로그인 사용자 ID
+        resumes.setUserId(userId); // ✅ 인증된 사용자의 실제 id
         resumes.setCreatedAt(LocalDateTime.now());
 
         System.out.println("🔥 저장 시작!");

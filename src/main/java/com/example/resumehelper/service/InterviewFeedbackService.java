@@ -9,6 +9,7 @@ import com.example.resumehelper.repository.InterviewFeedbackRepository;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -85,17 +86,18 @@ public class InterviewFeedbackService {
                 .orElse(null);
     }
 
-    // 5. 피드백 저장
+    // 5. 피드백 저장 (없으면 새로 생성 - 이전에는 영상분석 단계에서 최초 행이 생성됐었음)
     public void saveAllFeedback(Long userId, String feedbackText, String jobCompetency) {
-        InterviewFeedback latest = feedbackRepository.findTopByUserIdOrderByCreatedAtDesc(userId)
-                .orElse(null);
+        InterviewFeedback feedback = feedbackRepository.findTopByUserIdOrderByCreatedAtDesc(userId)
+                .orElseGet(() -> InterviewFeedback.builder()
+                        .userId(userId)
+                        .createdAt(LocalDateTime.now())
+                        .build());
 
-        if (latest != null) {
-            latest.setFeedbackText(feedbackText);
-            latest.setJobCompetency(jobCompetency);
+        feedback.setFeedbackText(feedbackText);
+        feedback.setJobCompetency(jobCompetency);
 
-            feedbackRepository.save(latest);
-        }
+        feedbackRepository.save(feedback);
     }
 
     private ResponseEntity<Map<String, Object>> error(String message) {

@@ -6,8 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.resumehelper.security.CustomUserDetails;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,9 +30,14 @@ public class VideoProcessingController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadVideo(
             @RequestParam("video") MultipartFile videoFile,
-            @RequestParam("userId") Long userId
+            @AuthenticationPrincipal CustomUserDetails principal
     ) {
         System.out.println("🚀 STEP 0 - 업로드 진입 성공");
+
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("❌ 로그인이 필요합니다.");
+        }
+        Long userId = principal.getId(); // ✅ 클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
 
         try {
             System.out.println("👤 사용자 ID: " + userId);
@@ -84,12 +92,16 @@ public class VideoProcessingController {
         }
     }
 
-    // ✅ 본인 다시보기용 최신 영상 조회 (분석 없이 재생만)
-    @GetMapping("/latest/{userId}")
-    public ResponseEntity<byte[]> getLatestVideo(@PathVariable Long userId) {
+    // ✅ 본인 다시보기용 최신 영상 조회 (분석 없이 재생만, 로그인한 본인 것만 조회 가능)
+    @GetMapping("/latest")
+    public ResponseEntity<byte[]> getLatestVideo(@AuthenticationPrincipal CustomUserDetails principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             String sql = "SELECT filename, file_data FROM video_files WHERE user_id = ? ORDER BY uploaded_at DESC LIMIT 1";
-            Map<String, Object> row = jdbcTemplate.queryForMap(sql, userId);
+            Map<String, Object> row = jdbcTemplate.queryForMap(sql, principal.getId());
 
             byte[] videoBytes = (byte[]) row.get("file_data");
             String filename = (String) row.get("filename");

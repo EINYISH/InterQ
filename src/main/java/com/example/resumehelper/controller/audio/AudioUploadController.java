@@ -3,11 +3,12 @@ package com.example.resumehelper.controller.audio;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.servlet.http.HttpSession;
+import com.example.resumehelper.security.CustomUserDetails;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +29,13 @@ public class AudioUploadController {
     @PostMapping("/audio")
     public ResponseEntity<String> saveSimulationAudio(
             @RequestParam("audio") MultipartFile file,
-            @RequestParam("userId") Long userId  // ✅ 세션 대신 userId 직접 받기
+            @AuthenticationPrincipal CustomUserDetails principal  // ✅ 세션에서 로그인된 사용자 확인
     ) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body("❌ 로그인이 필요합니다.");
+        }
+        Long userId = principal.getId(); // ✅ 클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
+
         System.out.println("🎙️ 음성 파일 업로드 요청: " + file.getOriginalFilename());
         System.out.println("📦 파일 크기: " + file.getSize());
         System.out.println("👤 사용자 ID: " + userId);

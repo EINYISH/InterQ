@@ -2,9 +2,12 @@ package com.example.resumehelper.controller.resume;
 
 import com.example.resumehelper.domain.Resume;
 import com.example.resumehelper.repository.ResumeRepository;
+import com.example.resumehelper.security.CustomUserDetails;
 import com.example.resumehelper.service.ResumeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -28,9 +31,14 @@ public class ResumeApiController {
 
     // ✅ 이력서 저장
     @PostMapping
-    public ResponseEntity<Resume> saveResume(@RequestBody Map<String, String> resumeData) {
+    public ResponseEntity<Resume> saveResume(
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @RequestBody Map<String, String> resumeData) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         System.out.println("📥 저장 요청 데이터: " + resumeData);
-        Resume savedResume = resumeService.saveResume(resumeData);
+        Resume savedResume = resumeService.saveResume(resumeData, principal.getId());
         System.out.println("✅ 저장 완료: " + savedResume.getId());
         return ResponseEntity.ok(savedResume);
     }
