@@ -1,7 +1,9 @@
 package com.example.resumehelper.controller.video;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/videos")
@@ -78,6 +81,26 @@ public class VideoProcessingController {
             System.err.println("❌ [ERROR] 예외 발생: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("❌ 업로드 실패: " + e.getMessage());
+        }
+    }
+
+    // ✅ 본인 다시보기용 최신 영상 조회 (분석 없이 재생만)
+    @GetMapping("/latest/{userId}")
+    public ResponseEntity<byte[]> getLatestVideo(@PathVariable Long userId) {
+        try {
+            String sql = "SELECT filename, file_data FROM video_files WHERE user_id = ? ORDER BY uploaded_at DESC LIMIT 1";
+            Map<String, Object> row = jdbcTemplate.queryForMap(sql, userId);
+
+            byte[] videoBytes = (byte[]) row.get("file_data");
+            String filename = (String) row.get("filename");
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("video/mp4"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                    .body(videoBytes);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
