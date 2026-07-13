@@ -36,12 +36,6 @@ public class InterviewFeedbackController {
         return interviewFeedbackService.generateJobCompetency(userId);
     }
 
-    @PostMapping("/tone-analysis")
-    public ResponseEntity<Map<String, Object>> generateToneAnalysis(@RequestBody Map<String, Object> request) {
-        Long userId = Long.valueOf(request.get("userId").toString());
-        return interviewFeedbackService.generateToneAnalysis(userId);
-    }
-
     @PostMapping("/generate-direct")
     public ResponseEntity<Map<String, Object>> generateFeedbackDirect(@RequestBody Map<String, String> request) {
         return interviewFeedbackService.generateFeedbackDirect(request.get("text"));
@@ -53,9 +47,8 @@ public class InterviewFeedbackController {
 
         String feedbackText = nullify(request.get("feedbackText"));
         String jobCompetency = nullify(request.get("jobCompetency"));
-        String toneAnalysis = nullify(request.get("toneAnalysis"));
 
-        interviewFeedbackService.saveAllFeedback(userId, feedbackText, jobCompetency, toneAnalysis);
+        interviewFeedbackService.saveAllFeedback(userId, feedbackText, jobCompetency);
 
         return ResponseEntity.ok("모든 피드백 저장 완료");
     }
