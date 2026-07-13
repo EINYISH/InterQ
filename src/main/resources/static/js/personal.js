@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const sidebarContentMap = {
     mypage: `<h3>My Page</h3><p>나의 프로필 정보와 설정을 확인하세요.</p>`,
     result: `<h3>종합 결과</h3><p>시뮬레이션에서 얻은 종합 결과를 확인하세요.</p>`,
-    'eye-tracking': `<h3>시선처리</h3><p>시선처리 결과 및 개선점을 확인하세요.</p>`,
-    'tone-analysis': `<h3>톤분석</h3><p>목소리 톤과 관련된 피드백을 확인하세요.</p>`,
+    'video-review': `<h3>영상 다시보기</h3><p>녹화된 면접 영상을 다시 확인하세요. (분석은 제공되지 않습니다)</p>`,
     'job-competency': `<h3>직무 역량</h3><p>현재 직무 역량에 대한 분석 결과를 확인하세요.</p>`,
     faq: `<h3>FAQ</h3><p>자주 묻는 질문과 답변을 확인하세요.</p>`,
     contact: `<h3>Contact</h3><p>문의사항이 있으시면 여기로 연락하세요.</p>`,
@@ -102,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
           <div class="faq-item">
             <button class="faq-question">면접 피드백은 어떤 기준으로 제공되나요?</button>
-            <div class="faq-answer">시선처리, 톤 분석, 직무 역량을 기준으로 종합 결과를 제공합니다.</div>
+            <div class="faq-answer">답변 내용과 직무 역량을 기준으로 종합 결과를 제공합니다.</div>
           </div>
           <div class="faq-item">
             <button class="faq-question">면접 질문은 매번 달라지나요?</button>
@@ -113,12 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="faq-answer">면접이 끝난 후, 사용자의 기록이 저장되어 추후 다시 확인할 수 있습니다.</div>
           </div>
           <div class="faq-item">
-            <button class="faq-question">면접 중 목소리 톤은 어떻게 분석되나요?</button>
-            <div class="faq-answer">AI가 사용자의 톤을 분석하여 적절한 목소리 톤인지 피드백을 제공합니다.</div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question">시선처리 분석은 어떤 방식으로 이루어지나요?</button>
-            <div class="faq-answer">면접 중 사용자의 시선 움직임을 분석하여 적절한 시선처리를 했는지 평가합니다.</div>
+            <button class="faq-question">면접 영상은 어떻게 활용되나요?</button>
+            <div class="faq-answer">면접 영상은 AI가 분석하지 않으며, 본인이 다시 보며 스스로 점검할 수 있도록 저장됩니다.</div>
           </div>
           <div class="faq-item">
             <button class="faq-question">면접이 끝난 후 피드백을 다시 볼 수 있나요?</button>
@@ -134,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
           <div class="faq-item">
             <button class="faq-question">면접 시 AI는 어떤 요소를 중요하게 평가하나요?</button>
-            <div class="faq-answer">AI는 사용자의 시선, 목소리 톤, 대답의 논리성, 직무 역량을 종합적으로 평가합니다.</div>
+            <div class="faq-answer">AI는 답변 내용의 논리성과 직무 역량을 종합적으로 평가합니다.</div>
            </div>
         </div>
       `;
@@ -228,8 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
       "3번의 면접 도전",
       "5번의 면접 도전",
       "첫 번째 피드백 확인",
-      "시선처리 분석 받기",
-      "목소리 톤 분석 받기",
+      "영상 다시보기로 복기하기",
       "직무역량 분석 받기",
       "면접 질문 복기하기",
       "마이페이지에서 도전과제 확인",
