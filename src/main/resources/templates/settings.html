@@ -201,7 +201,7 @@
 
     try {
       // API 호출로 사용자 정보 불러오기
-      const response = await fetch('/api/settings-info', {
+      const response = await fetch('/api/mypage-info', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include' // 세션 쿠키 포함
@@ -214,7 +214,7 @@
       const userInfo = await response.json();
       usernameField.value = userInfo.username; // 아이디 표시 (readonly)
       nicknameField.value = userInfo.nickname; // 닉네임 표시
-      passwordField.value = userInfo.password; // 비밀번호 표시
+      passwordField.value = ''; // 비밀번호는 서버가 내려주지 않음 - 바꿀 때만 입력
     } catch (error) {
       message.innerText = '사용자 정보를 불러오는 중 오류가 발생했습니다.';
       console.error(error);
@@ -231,8 +231,8 @@
         const response = await fetch('/api/update-user', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // ✅ 로그인 세션 쿠키 포함 필수
           body: JSON.stringify({
-            username: usernameField.value,
             nickname: nickname,
             password: password,
           }),

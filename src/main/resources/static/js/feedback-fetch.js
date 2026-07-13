@@ -1,10 +1,14 @@
 window.feedbackData = {};
 
 document.addEventListener("DOMContentLoaded", async function () {
-    const userId = 1;
-
     try {
-        const res = await fetch(`/api/feedback/latest/${userId}`);
+        const res = await fetch(`/api/feedback/latest`, { credentials: "include" });
+
+        if (res.status === 401) {
+            console.warn("⚠️ 로그인이 필요합니다.");
+            return;
+        }
+
         const data = await res.json();
         window.feedbackData = data;
 
@@ -21,6 +25,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     // 본인 다시보기용 시뮬레이션 영상 로드 (분석 없이 재생만)
     const playbackVideo = document.getElementById("playback-video");
     if (playbackVideo) {
-        playbackVideo.src = `/api/videos/latest/${userId}`;
+        playbackVideo.src = `/api/videos/latest`;
     }
 });

@@ -6,10 +6,13 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import com.example.resumehelper.security.CustomUserDetails;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -21,7 +24,7 @@ import java.util.Map;
 @RequestMapping("/api/process")
 public class AudioProcessingController {
 
-    @Value("${openai.api-key}")
+    @Value("${openai.api.key}")
     private String openAiApiKey;
 
     @Autowired
@@ -30,7 +33,13 @@ public class AudioProcessingController {
     private final String whisperApiUrl = "https://api.openai.com/v1/audio/transcriptions";
 
     @PostMapping("/transcribe-from-db")
-    public ResponseEntity<Map<String, Object>> transcribeFromDatabase(@RequestParam("userId") Long userId) {
+    public ResponseEntity<Map<String, Object>> transcribeFromDatabase(@AuthenticationPrincipal CustomUserDetails principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Collections.singletonMap("error", "로그인이 필요합니다."));
+        }
+        Long userId = principal.getId(); // ✅ 클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
+
         System.out.println("🔁 [LOG] DB에서 오디오 꺼내 Whisper 요청 시작: userId=" + userId);
 
         try {

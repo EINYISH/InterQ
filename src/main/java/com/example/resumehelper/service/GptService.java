@@ -21,19 +21,11 @@ public class GptService {
         this.gptApiClient = gptApiClient;
     }
 
-    public ResponseEntity<Map<String, Object>> generateQuestions(Map<String, String> resumeData) {
+    public ResponseEntity<Map<String, Object>> generateQuestions(Map<String, String> resumeData, Long userId) {
         try {
             // 1. 유효성 검사
-            String userIdStr = resumeData.get("userId");
-            if (userIdStr == null || userIdStr.isBlank()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "userId가 누락되었습니다"));
-            }
-
-            Long userId;
-            try {
-                userId = Long.parseLong(userIdStr);
-            } catch (NumberFormatException e) {
-                return ResponseEntity.badRequest().body(Map.of("error", "userId 형식 오류"));
+            if (userId == null) {
+                return ResponseEntity.badRequest().body(Map.of("error", "로그인이 필요합니다."));
             }
 
             // 2. Resume 저장
