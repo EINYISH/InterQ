@@ -24,13 +24,14 @@ import java.util.Map;
 @RequestMapping("/api/process")
 public class AudioProcessingController {
 
-    @Value("${openai.api.key}")
-    private String openAiApiKey;
+    @Value("${whisper.local-url:http://localhost:8081/inference}")
+    private String whisperLocalUrl;
+
+    @Value("${whisper.language:ko}")
+    private String whisperLanguage;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    private final String whisperApiUrl = "https://api.openai.com/v1/audio/transcriptions";
 
     @PostMapping("/transcribe-from-db")
     public ResponseEntity<Map<String, Object>> transcribeFromDatabase(@AuthenticationPrincipal CustomUserDetails principal) {
@@ -38,9 +39,9 @@ public class AudioProcessingController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Collections.singletonMap("error", "로그인이 필요합니다."));
         }
-        Long userId = principal.getId(); // ✅ 클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
+        Long userId = principal.getId(); // 클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
 
-        System.out.println("🔁 [LOG] DB에서 오디오 꺼내 Whisper 요청 시작: userId=" + userId);
+        System.out.println("🔁 [LOG] DB에서 오디오 꺼내 로컬 Whisper(whisper.cpp) 요청 시작: userId=" + userId);
 
         try {
             // 1. DB에서 파일 데이터 가져오기
@@ -70,22 +71,21 @@ public class AudioProcessingController {
                 throw new IllegalStateException("❌ FFmpeg 변환 실패: 파일 생성 안됨");
             }
 
-            System.out.println("✅ [LOG] 변환 완료: " + convertedFile.getAbsolutePath());
+            System.out.println("[LOG] 변환 완료: " + convertedFile.getAbsolutePath());
 
-            // 4. Whisper API 요청 준비
+            // 4. 로컬 whisper.cpp 서버로 요청 준비 (API 키 불필요, language 명시 필수 - 안 하면 한국어를 못 알아듣고 의성어만 반환함)
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            headers.setBearerAuth(openAiApiKey);
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("model", "whisper-1");
             body.add("file", new FileSystemResource(convertedFile));
+            body.add("language", whisperLanguage);
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Map> response = restTemplate.exchange(
-                    whisperApiUrl,
+                    whisperLocalUrl,
                     HttpMethod.POST,
                     requestEntity,
                     Map.class
@@ -102,7 +102,7 @@ public class AudioProcessingController {
                     "WHERE filename = ? AND user_id = ? LIMIT 1";
             jdbcTemplate.update(updateSql, transcription, originalFileName, userId);
 
-            System.out.println("✅ [LOG] Whisper 텍스트 저장 완료: " + transcription);
+            System.out.println(" [LOG] Whisper 텍스트 저장 완료: " + transcription);
 
             // 6. 임시 파일 정리
             inputFile.delete();
@@ -111,7 +111,7 @@ public class AudioProcessingController {
             return ResponseEntity.ok(response.getBody());
 
         } catch (Exception e) {
-            System.err.println("❌ [LOG] Whisper 변환 실패: " + e.getMessage());
+            System.err.println(" [LOG] Whisper 변환 실패: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Whisper 변환 실패: " + e.getMessage()));
         }
