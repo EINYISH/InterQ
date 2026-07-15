@@ -23,7 +23,7 @@ public class MypageController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // ✅ 로그인한 "본인" 정보만 수정 가능 (username을 body로 받지 않고 인증정보에서 가져옴)
+    // 로그인한 "본인" 정보만 수정 가능 (username을 body로 받지 않고 인증정보에서 가져옴)
     @PostMapping("/update-user")
     public ResponseEntity<String> updateUser(
             @AuthenticationPrincipal CustomUserDetails principal,
@@ -44,7 +44,7 @@ public class MypageController {
 
             String newPassword = request.get("password");
             if (newPassword != null && !newPassword.isBlank()) {
-                user.setPassword(passwordEncoder.encode(newPassword)); // ✅ 해싱해서 저장
+                user.setPassword(passwordEncoder.encode(newPassword)); // 해싱해서 저장
             }
 
             userRepository.save(user);
@@ -54,7 +54,7 @@ public class MypageController {
         }
     }
 
-    // ✅ 현재 로그인된 사용자 정보 조회 - 비밀번호(해시값이라도)는 응답에 절대 포함하지 않음
+    // 현재 로그인된 사용자 정보 조회 - 비밀번호(해시값이라도)는 응답에 절대 포함하지 않음
     @GetMapping("/mypage-info")
     public ResponseEntity<Map<String, Object>> getMyPageInfo(@AuthenticationPrincipal CustomUserDetails principal) {
         if (principal == null) {
