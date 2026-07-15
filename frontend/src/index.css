@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('https://static.figma.com/font/PlusJakartaSans_wght__2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('https://static.figma.com/font/JetBrainsMono_wght__1') format('woff2');
+}
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-bg: #080C18;
+  --color-surface: #0F1628;
+  --color-surface-2: #151D35;
+  --color-border: #1E2A4A;
+  --color-border-2: #253050;
+
+  --color-blue: #4A7CFF;
+  --color-blue-dim: #2550CC;
+  --color-blue-glow: rgba(74, 124, 255, 0.15);
+  --color-blue-subtle: rgba(74, 124, 255, 0.08);
+
+  --color-text: #E8EEFF;
+  --color-text-2: #8A9BBF;
+  --color-text-3: #4A5880;
+
+  --color-green: #22D27F;
+  --color-green-dim: rgba(34, 210, 127, 0.12);
+  --color-amber: #F5A623;
+  --color-amber-dim: rgba(245, 166, 35, 0.12);
+  --color-red: #FF4D6A;
+  --color-red-dim: rgba(255, 77, 106, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: #080C18;
+  color: #e8eeff;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2a4a;
+  border-radius: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1e2a4a transparent;
+}
