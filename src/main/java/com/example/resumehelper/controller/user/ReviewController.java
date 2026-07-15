@@ -16,7 +16,7 @@ public class ReviewController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    // ✅ 리뷰 전체 목록 조회
+    // 리뷰 전체 목록 조회
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getReviews() {
         String query = "SELECT id, author, text, rating, created_at, is_private FROM reviews ORDER BY created_at DESC";
@@ -24,7 +24,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    // ✅ 리뷰 작성
+    // 리뷰 작성
     @PostMapping
     public ResponseEntity<String> addReview(@RequestBody Map<String, Object> payload) {
         String author = (String) payload.get("author");
@@ -43,7 +43,7 @@ public class ReviewController {
         return ResponseEntity.ok("리뷰가 성공적으로 추가되었습니다.");
     }
 
-    // ✅ 비공개 리뷰 조회
+    // 비공개 리뷰 조회
     @PostMapping("/private")
     public ResponseEntity<Map<String, Object>> getPrivateReview(@RequestBody Map<String, Object> payload) {
         int reviewId = (int) payload.get("review_id");

@@ -61,7 +61,7 @@ public class InterviewFeedbackController {
         return "undefined".equals(val) ? null : (String) val;
     }
 
-    // ✅ path variable로 userId를 받지 않고, 로그인한 "본인"의 최신 피드백만 조회
+    // path variable로 userId를 받지 않고, 로그인한 "본인"의 최신 피드백만 조회
     @GetMapping("/latest")
     public ResponseEntity<InterviewFeedback> getLatestFeedback(@AuthenticationPrincipal CustomUserDetails principal) {
         if (principal == null) {

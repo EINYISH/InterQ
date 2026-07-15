@@ -35,17 +35,17 @@ public class VideoProcessingController {
         System.out.println("🚀 STEP 0 - 업로드 진입 성공");
 
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("❌ 로그인이 필요합니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(" 로그인이 필요합니다.");
         }
-        Long userId = principal.getId(); // ✅ 클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
+        Long userId = principal.getId(); // 클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
 
         try {
-            System.out.println("👤 사용자 ID: " + userId);
-            System.out.println("📦 파일 크기: " + videoFile.getSize());
+            System.out.println(" 사용자 ID: " + userId);
+            System.out.println(" 파일 크기: " + videoFile.getSize());
 
             if (videoFile.getSize() == 0) {
-                System.err.println("❌ 비디오 파일이 비어 있습니다.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("❌ 비디오 파일이 비어 있습니다.");
+                System.err.println(" 비디오 파일이 비어 있습니다.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(" 비디오 파일이 비어 있습니다.");
             }
 
             File uploadDir = new File(VIDEO_UPLOAD_DIR);
@@ -62,37 +62,37 @@ public class VideoProcessingController {
             String originalFilePath = VIDEO_UPLOAD_DIR + originalFileName;
             File originalFile = new File(originalFilePath);
 
-            System.out.println("💾 STEP 1 - 원본 파일 저장 시작");
+            System.out.println(" STEP 1 - 원본 파일 저장 시작");
             try (FileOutputStream fos = new FileOutputStream(originalFile)) {
                 fos.write(videoFile.getBytes());
                 fos.flush();
             }
-            System.out.println("✅ STEP 1 - 원본 파일 저장 완료");
+            System.out.println(" STEP 1 - 원본 파일 저장 완료");
 
             String compressedFilePath = COMPRESSED_VIDEO_DIR + originalFileName.replace(".webm", ".mp4");
-            System.out.println("🎬 STEP 2 - FFmpeg 압축 시작");
+            System.out.println(" STEP 2 - FFmpeg 압축 시작");
             compressVideo(originalFilePath, compressedFilePath);
-            System.out.println("✅ STEP 2 - FFmpeg 압축 완료");
+            System.out.println(" STEP 2 - FFmpeg 압축 완료");
 
             if (originalFile.exists()) {
                 boolean deleted = originalFile.delete();
-                System.out.println("🗑️ STEP 3 - 원본 삭제 완료 여부: " + deleted);
+                System.out.println(" STEP 3 - 원본 삭제 완료 여부: " + deleted);
             }
 
-            System.out.println("💽 STEP 4 - DB 저장 시도");
+            System.out.println(" STEP 4 - DB 저장 시도");
             saveVideoToDatabase(compressedFilePath, userId);
-            System.out.println("✅ STEP 4 - DB 저장 완료");
+            System.out.println(" STEP 4 - DB 저장 완료");
 
-            return ResponseEntity.ok("✅ 비디오 업로드 및 변환 완료: " + compressedFilePath);
+            return ResponseEntity.ok(" 비디오 업로드 및 변환 완료: " + compressedFilePath);
 
         } catch (Exception e) {
-            System.err.println("❌ [ERROR] 예외 발생: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            System.err.println(" [ERROR] 예외 발생: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("❌ 업로드 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(" 업로드 실패: " + e.getMessage());
         }
     }
 
-    // ✅ 본인 다시보기용 최신 영상 조회 (분석 없이 재생만, 로그인한 본인 것만 조회 가능)
+    //  본인 다시보기용 최신 영상 조회 (분석 없이 재생만, 로그인한 본인 것만 조회 가능)
     @GetMapping("/latest")
     public ResponseEntity<byte[]> getLatestVideo(@AuthenticationPrincipal CustomUserDetails principal) {
         if (principal == null) {
@@ -132,11 +132,11 @@ public class VideoProcessingController {
             int exitCode = process.waitFor();
 
             if (exitCode != 0) {
-                System.err.println("❌ FFmpeg 압축 실패. exitCode: " + exitCode);
+                System.err.println(" FFmpeg 압축 실패. exitCode: " + exitCode);
                 throw new RuntimeException("FFmpeg 압축 실패. exitCode: " + exitCode);
             }
         } catch (Exception e) {
-            System.err.println("❌ FFmpeg 실행 중 오류 발생: " + e.getMessage());
+            System.err.println(" FFmpeg 실행 중 오류 발생: " + e.getMessage());
             throw new RuntimeException("FFmpeg 실행 중 오류 발생: " + e.getMessage(), e);
         }
     }
@@ -146,7 +146,7 @@ public class VideoProcessingController {
         String fileName = file.getName();
         byte[] videoBytes = java.nio.file.Files.readAllBytes(file.toPath());
 
-        System.out.println("📤 저장할 파일명: " + fileName + ", 바이트 크기: " + videoBytes.length);
+        System.out.println(" 저장할 파일명: " + fileName + ", 바이트 크기: " + videoBytes.length);
 
         String sql = "INSERT INTO video_files (filename, file_data, user_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, fileName, videoBytes, userId);

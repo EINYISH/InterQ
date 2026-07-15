@@ -29,21 +29,21 @@ public class AudioUploadController {
     @PostMapping("/audio")
     public ResponseEntity<String> saveSimulationAudio(
             @RequestParam("audio") MultipartFile file,
-            @AuthenticationPrincipal CustomUserDetails principal  // ✅ 세션에서 로그인된 사용자 확인
+            @AuthenticationPrincipal CustomUserDetails principal  // 세션에서 로그인된 사용자 확인
     ) {
         if (principal == null) {
-            return ResponseEntity.status(401).body("❌ 로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(" 로그인이 필요합니다.");
         }
-        Long userId = principal.getId(); // ✅ 클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
+        Long userId = principal.getId(); //  클라이언트가 보낸 값이 아니라 서버가 확인한 본인 ID
 
-        System.out.println("🎙️ 음성 파일 업로드 요청: " + file.getOriginalFilename());
-        System.out.println("📦 파일 크기: " + file.getSize());
-        System.out.println("👤 사용자 ID: " + userId);
+        System.out.println(" 음성 파일 업로드 요청: " + file.getOriginalFilename());
+        System.out.println(" 파일 크기: " + file.getSize());
+        System.out.println(" 사용자 ID: " + userId);
 
         try {
             File uploadFolder = new File(uploadDir);
             if (!uploadFolder.exists() && !uploadFolder.mkdirs()) {
-                return ResponseEntity.status(500).body("❌ 업로드 디렉토리 생성 실패");
+                return ResponseEntity.status(500).body(" 업로드 디렉토리 생성 실패");
             }
 
             String originalFileName = file.getOriginalFilename();
@@ -58,11 +58,11 @@ public class AudioUploadController {
 
             saveAudioToDatabase(file, webmFileName, userId);
 
-            System.out.println("✅ WAV 변환 및 DB 저장 완료: " + wavFileName);
-            return ResponseEntity.ok("✅ 변환 및 저장 성공: " + wavFileName);
+            System.out.println(" WAV 변환 및 DB 저장 완료: " + wavFileName);
+            return ResponseEntity.ok(" 변환 및 저장 성공: " + wavFileName);
 
         } catch (IOException e) {
-            System.err.println("❌ 파일 처리 실패: " + e.getMessage());
+            System.err.println(" 파일 처리 실패: " + e.getMessage());
             return ResponseEntity.status(500).body("파일 처리 실패: " + e.getMessage());
         }
     }

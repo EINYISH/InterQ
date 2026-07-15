@@ -22,14 +22,14 @@ public class ResumeApiController {
     @Autowired
     private ResumeService resumeService;
 
-    // ✅ 전체 이력서 조회
+    // 전체 이력서 조회
     @GetMapping
     public ResponseEntity<List<Resume>> getAllResumes() {
         List<Resume> resumes = resumeRepository.findAll();
         return ResponseEntity.ok(resumes);
     }
 
-    // ✅ 이력서 저장
+    // 이력서 저장
     @PostMapping
     public ResponseEntity<Resume> saveResume(
             @AuthenticationPrincipal CustomUserDetails principal,
@@ -37,13 +37,13 @@ public class ResumeApiController {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        System.out.println("📥 저장 요청 데이터: " + resumeData);
+        System.out.println(" 저장 요청 데이터: " + resumeData);
         Resume savedResume = resumeService.saveResume(resumeData, principal.getId());
-        System.out.println("✅ 저장 완료: " + savedResume.getId());
+        System.out.println(" 저장 완료: " + savedResume.getId());
         return ResponseEntity.ok(savedResume);
     }
 
-    // ✅ 질문 처리 (업로드 후)
+    // 질문 처리 (업로드 후)
     @PostMapping("/upload")
     public ResponseEntity<Map<String, Object>> handleQuestions(@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> response = new HashMap<>();

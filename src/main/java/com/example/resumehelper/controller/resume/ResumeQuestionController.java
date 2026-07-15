@@ -18,7 +18,7 @@ public class ResumeQuestionController {
         this.resumeRepository = resumeRepository;
     }
 
-    // ✅ 이력서 ID로 GPT 질문 리스트 반환
+    // 이력서 ID로 GPT 질문 리스트 반환
     @GetMapping("/{id}/questions")
     public ResponseEntity<List<String>> getGptQuestions(@PathVariable Long id) {
         try {
